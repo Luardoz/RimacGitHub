@@ -28,7 +28,7 @@ public class HomeController {
 	
     @RequestMapping(value = { "/" }, method = RequestMethod.GET)
     public String homePage(ModelMap model) {
-    	logger.info("Devolviendo Login");        
+    	logger.info("[homePage]Devolviendo Login");        
         return "public/login";
     }
  
@@ -39,11 +39,13 @@ public class HomeController {
 	public String decisor(HttpServletRequest request) {
 	
 		String page = "";
-		
+		logger.info("[decisor]Identificando rol");
 		Collection<? extends GrantedAuthority> authorities= loggedUserAuthorities();		
 		 if (authorities.contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+			 logger.info("[decisor]Acceso administrador");
 			 page = "redirect:../admin";
 		 }else if (authorities.contains(new SimpleGrantedAuthority("ROLE_USER"))) {
+			 logger.info("[decisor]Acceso usuario");
 		     page = "redirect:../user";
 		 }
 		
@@ -52,6 +54,7 @@ public class HomeController {
  
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String loginPage() {
+    	logger.info("[loginPage]Devolviendo Login"); 
         return "public/login";
     }
  
