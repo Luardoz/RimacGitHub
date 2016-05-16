@@ -1,4 +1,4 @@
-package pe.com.rimac.sat.portal;
+package pe.com.rimac.sat.portal.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-public class UserController {
+public class AdminController {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-	    
-    @RequestMapping(value = "/user", method = RequestMethod.GET)
-    public String userPage(ModelMap model) {
-    	logger.info("Devolviendo vista usuario");
+	private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
+	
+    @RequestMapping(value = "/admin", method = RequestMethod.GET)
+    public String adminPage(ModelMap model) {
+    	logger.info("Devolviendo vista administrador");
         model.addAttribute("user", getPrincipal());
-        return "user/user";
+        return "admin/admin";
     }
     
     private String getPrincipal(){

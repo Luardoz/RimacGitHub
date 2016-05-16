@@ -1,4 +1,4 @@
-package pe.com.rimac.sat.portal;
+package pe.com.rimac.sat.portal.controller;
 
 import java.util.Collection;
 
