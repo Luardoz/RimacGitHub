@@ -11,7 +11,7 @@
 	</appender>
 	
 	<!-- Application Loggers -->
-	<logger name="pe.com.rimac.sat">
+	<logger name="pe.com.rimac.sat.portal">
 		<level value="info" />
 	</logger>
 	

@@ -41,7 +41,7 @@
 <!-- JS -->
 <script src="<%=request.getContextPath()%>/js/default/datepicker.custom.js"></script>
 <script src="<%=request.getContextPath()%>/js/default/main.js"></script>
-<script src="<%=request.getContextPath()%>/js/default/pages.js"></script>
+<%-- <script src="<%=request.getContextPath()%>/js/default/pages.js"></script> --%>
 <script src="<%=request.getContextPath()%>/js/default/moment.js"></script>
 
 <!-- JS Maps-->
