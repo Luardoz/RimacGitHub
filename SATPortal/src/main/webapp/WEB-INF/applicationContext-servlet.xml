@@ -31,7 +31,9 @@
 
 	<context:annotation-config />
 	<context:component-scan base-package="pe.com.rimac.sat" />	
+	<context:property-placeholder location="classpath:satportal.properties" />
 	
 	<import resource="spring/spring-config.xml" />	
+	
 
 </beans>
