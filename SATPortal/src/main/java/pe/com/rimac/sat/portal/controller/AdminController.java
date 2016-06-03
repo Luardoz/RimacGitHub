@@ -16,11 +16,11 @@ public class AdminController {
 	
     @RequestMapping(value = "/admin", method = RequestMethod.GET)
     public String adminPage(ModelMap model) {
-    	logger.info("Devolviendo vista administrador");
-        model.addAttribute("user", getPrincipal());
-        return "admin/admin";
+    	logger.info("[adminPage]Devolviendo vista administrador");
+    	model.addAttribute("user", getPrincipal());
+        return "admin/inicio";
     }
-    
+
     private String getPrincipal(){
         String userName = null;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

@@ -1,4 +1,3 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" %>
 
 <div id="header">				
 	<div id="logo" onclick="javascript:irInicio();" style="cursor: pointer;"></div>

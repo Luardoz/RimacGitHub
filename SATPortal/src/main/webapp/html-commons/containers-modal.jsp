@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"%>
+
 <%-- INI MODAL REGISTRAR RECLAMO --%>
 <div class="modal fade" 
 		id="modalRegistrarReclamo" 

@@ -16,8 +16,8 @@ public class UserController {
 	    
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     public String userPage(ModelMap model) {
-    	logger.info("Devolviendo vista usuario");
-        model.addAttribute("user", getPrincipal());
+    	logger.info("[userPage]Devolviendo vista usuario");       
+    	model.addAttribute("user", getPrincipal());
         return "user/user";
     }
     

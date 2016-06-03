@@ -33,16 +33,16 @@ public class HomeController {
     }
  
 	/**
-	 * @return devuelve pagina de acuerdo al role
+	 * @return devuelve pagina de acuerdo al rol
 	 */
 	@RequestMapping(value = "/autentificacion/decisor", method = RequestMethod.GET)
-	public String decisor(HttpServletRequest request) {
+	public String decisor(HttpServletRequest request, ModelMap model) {
 	
 		String page = "";
-		logger.info("[decisor]Identificando rol");
+		logger.info("[decisor]Identificando rol");		
 		Collection<? extends GrantedAuthority> authorities= loggedUserAuthorities();		
 		 if (authorities.contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-			 logger.info("[decisor]Acceso administrador");
+			 logger.info("[decisor]Acceso administrador");			 
 			 page = "redirect:../admin";
 		 }else if (authorities.contains(new SimpleGrantedAuthority("ROLE_USER"))) {
 			 logger.info("[decisor]Acceso usuario");

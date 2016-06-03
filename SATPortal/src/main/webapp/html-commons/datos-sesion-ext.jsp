@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"%>
+
 
 <div id="datos-cliente" class="header-section2">
 		
