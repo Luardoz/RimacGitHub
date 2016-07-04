@@ -10,4 +10,6 @@ public class Properties {
 	public String cAPPLICATION_ROLE_USER;
 	@Value("${application.role.admin}")
 	public String cAPPLICATION_ROLE_ADMIN;
+	@Value("${ruta.destino.archivo}")
+	public String cRUTA_DESTINO_ARCHIVO;
 }

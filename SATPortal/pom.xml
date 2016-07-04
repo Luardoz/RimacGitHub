@@ -21,11 +21,6 @@
 			<name>Luis Ricardo Rodriguez</name>
 			<email>luardoz.pe@gmail.com</email>
 		</developer>
-		<developer>
-			<id>hporras</id>
-			<name>Hernan Porras</name>
-			<email>xxxx@gmail.com</email>
-		</developer>
 	</developers>
 	<dependencies>
 		<!-- Spring -->
@@ -66,6 +61,18 @@
 	        <version>${spring.mobile-version}</version>
 	    </dependency>
 
+		<!-- fileUpload -->
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
+		</dependency>
+		
 		<!-- AspectJ -->
 		<dependency>
 			<groupId>org.aspectj</groupId>

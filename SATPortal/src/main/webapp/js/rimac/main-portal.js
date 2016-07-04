@@ -997,7 +997,7 @@ function obtenerEdad(){
 	
 	var hoy = new Date();
 
-	//-1 porque no se si ha cumplido años ya este año
+	//-1 porque no se si ha cumplido aï¿½os ya este aï¿½o
    	edad=hoy.getFullYear() - anoFNacim - 1;  
    	
    	//si resto los meses y da mayor si ha cumplido 
@@ -1005,7 +1005,7 @@ function obtenerEdad(){
    		edad = edad + 1;
    	}
 
-   	//Si los meses son iguales miro los días
+   	//Si los meses son iguales miro los dï¿½as
    	if (hoy.getMonth() - mesFNacim == 0){
 	   	if (hoy.getUTCDate() - diaFNacim >= 0){ 
 	   		edad = edad + 1;

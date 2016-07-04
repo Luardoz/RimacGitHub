@@ -41,7 +41,7 @@
 <!-- JS -->
 <script src="<%=request.getContextPath()%>/js/default/datepicker.custom.js"></script>
 <script src="<%=request.getContextPath()%>/js/default/main.js"></script>
-<%-- <script src="<%=request.getContextPath()%>/js/default/pages.js"></script> --%>
+<script src="<%=request.getContextPath()%>/js/default/pages.js"></script>
 <script src="<%=request.getContextPath()%>/js/default/moment.js"></script>
 
 <!-- JS Maps-->
@@ -89,3 +89,4 @@
 <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
 --%>
 <%-- FIN REQ C.FONG HTTPS --%>
+<script src="<%=request.getContextPath()%>/js/rimac/user/user.js"></script>

@@ -4,11 +4,13 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
     http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
       
-    <http auto-config="true" >
+    <http auto-config="false" use-expressions="true">
     	<intercept-url pattern="/autentificacion/decisor" access="isAuthenticated()" />
         <intercept-url pattern="/" access="permitAll" />        
-        <intercept-url pattern="/admin**" access="hasRole('ADMIN')" />
-        <intercept-url pattern="/user**" access="hasAnyRole('ADMIN','USER')" />            
+        <intercept-url pattern="/admin" access="hasRole('ADMIN')" />
+        <intercept-url pattern="/user" access="hasAnyRole('ADMIN','USER')" />            
+        <intercept-url pattern="/js/user/*" access="hasAnyRole('ADMIN','USER')" />        
+        <intercept-url pattern="/serviceUser/*" access="hasAnyRole('ADMIN','USER')" />               
         <form-login  login-page="/login" username-parameter="user" password-parameter="password" 
         	authentication-failure-url="/login?error" 
         	default-target-url="/autentificacion/decisor"/>
