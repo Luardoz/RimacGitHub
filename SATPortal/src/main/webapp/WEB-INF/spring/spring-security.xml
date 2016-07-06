@@ -22,8 +22,10 @@
         <authentication-provider>
             <user-service>
                 <user name="user1"  password="abc123"  authorities="ROLE_USER" />
+                <user name="SSAAVEDRAV"  password="1"  authorities="ROLE_USER" />
+                <user name="JPAEZC"  password="1"  authorities="ROLE_USER" />
                 <user name="admin" password="admin123" authorities="ROLE_ADMIN" />
-                <user name="lricardo"   password="admin123" authorities="ROLE_ADMIN,ROLE_USER" />
+                <user name="LRICARDOR"   password="admin123" authorities="ROLE_USER" />
             </user-service>
         </authentication-provider>
     </authentication-manager>      

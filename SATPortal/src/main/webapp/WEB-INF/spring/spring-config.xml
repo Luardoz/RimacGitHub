@@ -42,10 +42,10 @@
 	<mvc:resources mapping="/html-commons/**" location="/html-commons/" />
 
 	<!-- Bean para Subir archivos desde JSP al servidor - Tamaño en bytes -->
-	<!-- 5Mb actualmente -->
+	<!-- 8Mb actualmente -->
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-		<property name="maxUploadSize" value="5242880" />
+		<property name="maxUploadSize" value="8388608" />
 	</bean>
 		
 	<!-- Resolver de vistas .jsp -->

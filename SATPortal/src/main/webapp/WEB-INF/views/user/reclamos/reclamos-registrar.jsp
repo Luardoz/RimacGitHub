@@ -7,13 +7,16 @@
   </div> 
   <br>
   <br>
-  <%-- <c:url var="post_url"  value="/serviceUser/reclamos-registrar/nuevo" /> --%>
-  <form:form action="serviceUser/reclamos-registrar/nuevo?${_csrf.parameterName}=${_csrf.token}"  enctype="multipart/form-data" id="form-reclamos-registrar" method="post" modelAttribute="reclamo">
-  <%-- <form:form action="serviceUser/test" id="form-reclamos-registrar" method="post"> --%>
-    <div class="form-group">
+  <%-- <form:form action="serviceUser/reclamos-registrar/nuevo?${_csrf.parameterName}=${_csrf.token}"  enctype="multipart/form-data" id="form-reclamos-registrar" method="post" modelAttribute="reclamo"> --%>
+  <form:form enctype="multipart/form-data" id="form-reclamos-registrar" method="post" modelAttribute="reclamo">
+    <div class="form-group">    	 
         <label class="control-label col-xs-3  required">Tipo de Caso:</label>
         <div class="col-xs-5">
-         <select class="selectpicker form-control" id="idtipocaso" name="idtipocaso">
+         <select title="Aqui el tooltip..." class="selectpicker form-control" id="idtipocaso" name="idtipocaso">
+         	<option value="">Seleccione</option>
+         	<c:forEach items="${lstTipoCaso}" var="comboBox">
+                <option value="${comboBox.value}">${comboBox.descripcion}</option>
+            </c:forEach>
          </select>
           <div class="result"></div>
         </div>
@@ -21,7 +24,11 @@
     <div class="form-group">
         <label class="control-label col-xs-3 required">Sistema:</label>
         <div class="col-xs-5">
-         <select class="selectpicker form-control" id="idsistema" name="idsistema">
+         <select title="Aqui el tooltip..." class="selectpicker form-control" id="idsistema" name="idsistema">
+         	<option value="">Seleccione</option>
+         	<c:forEach items="${lstSistema}" var="comboBox">
+                <option value="${comboBox.value}">${comboBox.descripcion}</option>
+             </c:forEach>
          </select>
           <div class="result"></div>
         </div>
@@ -29,7 +36,11 @@
     <div class="form-group">
         <label class="control-label col-xs-3 required">Producto:</label>
         <div class="col-xs-5">
-         <select class="selectpicker form-control" id="idproducto" name="idproducto">
+         <select title="Aqui el tooltip..." class="selectpicker form-control" id="idproducto" name="idproducto">
+         	<option value="">Seleccione</option>
+         	 <c:forEach items="${lstProducto}" var="comboBox">
+                <option value="${comboBox.value}">${comboBox.descripcion}</option>
+             </c:forEach>
          </select>
           <div class="result"></div>
         </div>
@@ -51,7 +62,7 @@
     <div class="form-group">
         <label class="control-label col-xs-3 required">Titulo:</label>
         <div class="col-xs-9">
-            <input type="text" class="form-control" id="desctitulo" name="desctitulo">
+            <input title="Aqui el tooltip..." type="text" class="form-control" id="desctitulo" name="desctitulo">
              <div class="result"></div>
         </div>
     </div>
@@ -59,7 +70,7 @@
     <div class="form-group">
         <label class="control-label col-xs-3 required">Detalle del Caso:</label>
         <div class="col-xs-9">
-            <textarea rows="6" class="form-control" id="descdetallecaso" name="descdetallecaso" style="resize: none "></textarea>
+            <textarea title="Aqui el tooltip..." rows="6" class="form-control" id="descdetallecaso" name="descdetallecaso" style="resize: none "></textarea>
              <div class="result"></div>
         </div>
     </div>
@@ -67,9 +78,10 @@
     <div class="form-group">
         <label class="control-label col-xs-3">Adjuntar Archivo:</label>
         <div class="col-xs-9">
-            <input type="button" id="aniadirArchivo" name="aniadirArchivo" value="Adicionar adjunto" onclick="aniadirFilaAdjunto();">
+            <!-- <input type="button" id="aniadirArchivo" name="aniadirArchivo" value="Adicionar adjunto" onclick="aniadirFilaAdjunto();">
             <table id="tablaficheros"> 	        
-	        </table> 
+	        </table>  -->
+	        <input title="Aqui el tooltip..." type="file" class="form-control" id="file" name="file">
          </div>
          
     </div>
@@ -89,188 +101,15 @@
         </div>
     </div>
     </form:form>
-    
-    <a class='btn btn-primary' target="_blank" href="serviceUser/descargarArchivo" id='linkDescarga'>Descargar</a>
+
+	<div id="mensajes-registrar" hidden="hidden">
+		<div class="col-md-12">
+			<div id="container-mensaje"></div>
+		</div>			   								   	
+	</div>
+
+<!-- 
+    <a class='btn btn-primary' target="_blank" href="serviceUser/descargarArchivo" id='linkDescarga' onclick="alerta();">Descargar</a>
+ -->    
 </div>
-
-<!--
-<script type="text/javascript">
-	
-// 	var fecha   = new Date();
-// 	var dia_mes =fecha.getDate();
-// 	var mes     =fecha.getMonth()+1;
-// 	var año     =fecha.getFullYear();
-// 	var hora    =fecha.getHours();
-// 	var minutos =fecha.getMinutes();
-// 	var segundos=fecha.getSeconds();
-
-// 	if (mes < 10) {
-// 	   mes = '0' + mes;
-// 	}
-// 	if (dia_mes < 10) {
-// 	   dia_mes = '0' + dia_mes;
-// 	}
-// 	var fechaactual=dia_mes+'/'+mes+'/'+año+'  '+hora+':'+minutos+':'+segundos;
-// 	$('#idfecregistro').val(fechaactual);
-    lstTipoCaso();
-    lstProducto();
-    lstSistema();
-    
-	$("#form-reclamos-registrar").validate({
-		rules : {
-			idtipocaso	    : { required  : true },
-			idsistema       : { required  : true },
-			idproducto 	    : { required  : true },
-			desctitulo 	    : { required  : true },
-			descdetallecaso : { required  : true }
-		},
-		messages : {
-			idtipocaso 	    : { required  : "Seleccionar Tipo de Caso"},
-			idsistema 	    : { required  : "Seleccionar Sistema"},
-			idproducto 	    : { required  : "Seleccionar Producto"},
-			desctitulo	    : { required  : "Ingresar Titulo"},
-			descdetallecaso : { required  : "Ingresar Detalle de Caso"}
-		}
-	});	
-	
-function registrar_reclamo() {
-	var $inputs = $('#form-reclamos-registrar :input');
-	$inputs.each(function() {
-		if(this.id!=""){
-			if($("#form-reclamos-registrar #"+ this.id).valid())
-				$(".result", $("#"+this.id).parent()).html("<i class='success'></i>");			
-			else
-				$(".result", $("#"+this.id).parent()).html("<i class='error'></i>");
-		}
-	});
-
-	if($("#form-reclamos-registrar").valid()){
-	
-	var param = new Object();
-	param.idetipocaso	    =$("#form-reclamos-registrar #idtipocaso").val();
-	param.idesistema	    =$("#form-reclamos-registrar #idsistema").val();
-	param.ideproducto	    =$("#form-reclamos-registrar #idproducto").val();
-	param.desctitulo		=$("#form-reclamos-registrar #desctitulo").val();
-	param.descdetallecaso	=$("#form-reclamos-registrar #descdetallecaso").val();
-	param.archivo1      	=$("#form-reclamos-registrar #archivo1").val();
-	param.usucreacion       =CTE_USUARIO;
-	
-	loadModalCargando();
-	setTimeout(
-			  function(){
-					$.ajax({
-						type 		: "POST",
-						url 		: "/WORKFLOW/mntwf.do?method=mntReclamo",
-						cache 		: false ,
-						dataType	: "json",
-						contentType : "application/x-www-form-urlencoded; charset=UTF-8",
-						async 		: false,
-						data 		: param,
-						success 	: function(rsp){
-											var status 	= rsp.statustx;
-											var message = rsp.messagetx;
-											closeModalCargando();
-											if(status == 0){
-												loadModalMensaje("Felicitaciones", message, function(){$("#modalRegistro").modal('hide');});
-												//[INI] KCARRANZAP - 10/08/2015
-												dataLayer.push({'event': 'RegisterSuccess', 'RegisterID': $("#form-registro-cliente #numerodoc").val()});
-												//[FIN] KCARRANZAP - 10/08/2015
-												limpiarFormulario('form-registro-cliente');
-											}else
-												loadModalMensaje("Atención",message,null);
-						},						
-						error: function (rsp, xhr, ajaxOptions, thrownError) {
-							closeModalCargando();
-							loadModalMensaje("Error","ERROR REGISTRANDO RECLAMO",null);
-						}			
-					});		    					    				
-				},1000);  
-	}
-}
-
-function lstTipoCaso(){
-	var param 		  = new Object();
-	$.ajax({
-		type  		: "POST",
-		url   		: "/WORKFLOW/mntwf.do?method=cmbTipoCaso",
-		cache 		: false,
-		async 		: false,
-		dataType 	: 'json',
-		contentType : "application/x-www-form-urlencoded; charset=UTF-8",
-		data		: {datos:JSON.stringify(param)},
-		success 	: function(data) {
-					if (data != 'undefined'){
-					    var jsonReclamos = eval(data.lsttipocaso);
-						llenarCombo('idtipocaso', jsonReclamos, true);
-					};
-		},
-		error : function(xhr, ajaxOptions, thrownError) {
-			loadModalMensaje('Lo Sentimos','<center>Hubo problemas en el procesamiento de datos. Por favor, inténtelo en unos minutos.</center>','');
-		}
-	});
-}
-
-function lstProducto(){
-	var param 		  = new Object();
-	param.ideatributo =1780;
-	$.ajax({
-		type  		: "POST",
-		url   		: "/WORKFLOW/mntwf.do?method=cmbProducto",
-		cache 		: false,
-		async 		: false,
-		dataType 	: 'json',
-		contentType : "application/x-www-form-urlencoded; charset=UTF-8",
-		data		: param,
-		success 	: function(data) {
-					if (data != 'undefined'){
-					    var jsonReclamos = eval(data.lstproducto);
-						llenarCombo('idproducto', jsonReclamos, true);
-					};
-		},
-		error : function(xhr, ajaxOptions, thrownError) {
-			loadModalMensaje('Lo Sentimos','<center>Hubo problemas en el procesamiento de datos. Por favor, inténtelo en unos minutos.</center>','');
-		}
-	});
-}
-
-function lstSistema(){
-	var param 		  = new Object();
-	param.idetippar   ='RTC_PARAPLICACIONRIMAC';
-	$.ajax({
-		type  		: "POST",
-		url   		: "/REQUERIMIENTO/util.do?method=listaParametro",
-		cache 		: false,
-		async 		: false,
-		dataType 	: 'json',
-		contentType : "application/x-www-form-urlencoded; charset=UTF-8",
-		data		: param,
-		success 	: function(data) {
-					if (data != 'undefined'){
-					    var jsonReclamos = eval(data);
-						llenarCombo('idsistema', jsonReclamos, true);
-					};
-		},
-		error : function(xhr, ajaxOptions, thrownError) {
-			loadModalMensaje('Lo Sentimos','<center>Hubo problemas en el procesamiento de datos. Por favor, inténtelo en unos minutos.</center>','');
-		}
-	});
-}
-
-function llenarCombo(idControl,listaOpciones,emptyElement){
-	
-	var combo = $('#'+idControl);
-	combo.empty();
-	if(emptyElement)
-		combo.append('<option value="">'+'Seleccionar'+'</option>');
-	for(var i=0; i<listaOpciones.length; i++){
-		if(listaOpciones[i][1] != "NO DETERMINADO"){
-			var opcion = '<option value="'+listaOpciones[i][0]+'" >'+listaOpciones[i][1]+'</option>' ;
-			combo.append(opcion);
-		}
-	}
-	$('#'+idControl).change();
-}
--->
-</script>
-
 

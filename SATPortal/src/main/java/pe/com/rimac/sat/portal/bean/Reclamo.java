@@ -6,13 +6,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class Reclamo {
 
-	//private String _csrf;
 	private String idtipocaso;
 	private String idsistema;
 	private String idproducto;
 	private String idfecregistro;
 	private String desctitulo;
-	private String descdetallecaso;
+	private String descdetallecaso;	
 	private List<MultipartFile> archivos;
 	
 	public String getIdtipocaso() {
