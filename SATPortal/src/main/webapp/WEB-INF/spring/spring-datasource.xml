@@ -17,8 +17,11 @@
        http://www.springframework.org/schema/jee/spring-jee-3.1.xsd">
 
 
-	  <jee:jndi-lookup id="satDS" jndi-name="${bd.sat.jndi}"
-              lookup-on-startup = "false"
-              proxy-interface   = "javax.sql.DataSource"/>
+	  <jee:jndi-lookup id				 = "satDS" 
+	  				   jndi-name		 = "${bd.sat.datasource.jndi}"
+	  				   cache             = "true"
+					   resource-ref      = "true" 
+              		   lookup-on-startup = "false"
+              		   proxy-interface   = "javax.sql.DataSource"/>
 
 </beans>

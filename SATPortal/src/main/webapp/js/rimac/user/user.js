@@ -99,6 +99,7 @@ function registrarReclamo(){
 						'</div>');
 			$("#msj-result-reg-reclamo").html("Hubo un error registrando el reclamo");			
 			$("#mensajes-registrar").show();
+			closeModalCargando();
 		}
 	});
 }
