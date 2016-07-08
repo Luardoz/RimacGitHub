@@ -37,6 +37,14 @@ public class Properties {
 	public int cSP_COMBO_PRODUCTO_IDEATRIBUTO;
 	@Value("${sp.registro.workflow}")
 	public String cSP_REGISTRO_WORKFLOW;	
+	@Value("${sp.registro.workflow.identregable}")
+	public int cSP_REGISTRO_WORKFLOW_IDENTREGABLE;
+	@Value("${sp.consulta.workflow}")
+	public String cSP_CONSULTA_WORKFLOW;
+	@Value("${sp.consulta.tareas}")
+	public String cSP_CONSULTA_TAREAS;
+	@Value("${sp.consulta.documento}")
+	public String cSP_CONSULTA_DOCUMENTO;
 	
 	/*
 	 * PROPIEDADES PARA JSP

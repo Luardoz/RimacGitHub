@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,14 +23,18 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import pe.com.rimac.sat.portal.bean.ComboBox;
+import pe.com.rimac.sat.portal.bean.Incidente;
 import pe.com.rimac.sat.portal.bean.Response;
+import pe.com.rimac.sat.portal.bean.Tarea;
 import pe.com.rimac.sat.portal.bean.WorkFlow;
 import pe.com.rimac.sat.portal.exception.DBException;
 import pe.com.rimac.sat.portal.service.UserService;
@@ -85,7 +90,7 @@ public class UserController {
     	try{
 	    	MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 	    	MultipartFile multipartFile = multipartRequest.getFile("fileBytes");	    		    		    
-	    	logger.info(metodo + "fileName: " + request.getParameter("fileName"));
+	    	logger.info(metodo + "fileName: " + multipartFile.getOriginalFilename());
 	    	logger.info(metodo + "idtipocaso: " + request.getParameter("idtipocaso"));
 	    	logger.info(metodo + "idsistema: " + request.getParameter("idsistema"));
 	    	logger.info(metodo + "idproducto: " + request.getParameter("idproducto"));
@@ -107,6 +112,44 @@ public class UserController {
     		res.setMsjResp("Ocurrio un error registrando el WorkFlow en la Base de Datos. Intentelo mas tarde");
     		logger.error(metodo + "Ocurrio un error en BD");
     	}
+        return res;
+    }
+    
+    @RequestMapping(value = "/serviceUser/reclamos-mis-reclamos/listar", method = {RequestMethod.POST},  produces = { "application/json" })
+    @ResponseBody
+    public List<Incidente> listarWorkFlow(@RequestHeader("codUsu") String codUsu, HttpServletRequest request){    	
+    	List<Incidente> res = new ArrayList<Incidente>();    	   
+	    String traza = "[listarWorkFlow]";		   
+	    
+    	try{	    	
+	    	logger.info(traza + "codUsu: " + codUsu);	    		    			    
+	    	res = userService.getIncidenteList(traza, codUsu);	        		    		    	
+    	}catch(DBException e){
+    		res.clear();    		
+    		logger.error(traza + "Ocurrio un error en BD");
+    	}finally{
+    		
+    	}
+    	
+        return res;
+    }
+    
+    @RequestMapping(value = "/serviceUser/reclamos-mis-reclamos/tareas", method = {RequestMethod.GET},  produces = { "application/json" })
+    @ResponseBody
+    public List<Tarea> listarTareas(@RequestParam("idewf") int ideWf, HttpServletRequest request){    	
+    	List<Tarea> res = new ArrayList<Tarea>();    	   
+	    String traza = "[listarWorkFlow]";		   
+	    
+    	try{	    	
+	    	logger.info(traza + "idewf: " + ideWf);	    		    			    
+	    	res = userService.getTareas(traza, ideWf);	        		    		    	
+    	}catch(DBException e){
+    		res.clear();    		
+    		logger.error(traza + "Ocurrio un error en BD");
+    	}finally{
+    		
+    	}
+    	
         return res;
     }
     

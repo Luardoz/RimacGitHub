@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import pe.com.rimac.sat.portal.bean.ComboBox;
+import pe.com.rimac.sat.portal.bean.Incidente;
 import pe.com.rimac.sat.portal.bean.Response;
+import pe.com.rimac.sat.portal.bean.Tarea;
 import pe.com.rimac.sat.portal.bean.WorkFlow;
 import pe.com.rimac.sat.portal.dao.PortalSatDAO;
 import pe.com.rimac.sat.portal.dao.PortalSatDAOImpl;
@@ -64,8 +66,27 @@ public class UserServiceImpl implements UserService{
 		logger.info(traza + "<------------- Inicio metodo saveWorkFlow ------------->");		
 		logger.info(traza + "Registrando el WorkFlow en Base de Datos");
 		response = portalSatDAO.saveWorkFlowDB(cadenaTraza, bean);		
-		
 		logger.info(traza + "<------------- Fin metodo saveWorkFlow ------------->");
+		return response;
+	}
+
+	@Override
+	public List<Incidente> getIncidenteList(String cadenaTraza, String codUsu) throws DBException {
+		String traza = cadenaTraza + "[getIncidenteList]";	
+		List<Incidente> response = new ArrayList<Incidente>();
+		logger.info(traza + "<------------- Inicio metodo getIncidenteList ------------->");				
+		response = portalSatDAO.getIncidentes(cadenaTraza, codUsu);		
+		logger.info(traza + "<------------- Fin metodo getIncidenteList ------------->");
+		return response;
+	}
+
+	@Override
+	public List<Tarea> getTareas(String cadenaTraza, int idewf) throws DBException {
+		String traza = cadenaTraza + "[getTareas]";	
+		List<Tarea> response = new ArrayList<Tarea>();
+		logger.info(traza + "<------------- Inicio metodo getTareas ------------->");				
+		response = portalSatDAO.getTareasDB(cadenaTraza, idewf);		
+		logger.info(traza + "<------------- Fin metodo getTareas ------------->");
 		return response;
 	}
 

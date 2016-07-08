@@ -6,7 +6,7 @@
 		<div id="header-section2">
 			<i class="m-icn-locked"></i>			
 			<span id="avatar">
-				<span id="nameTitularHeader"><strong>${user}</strong></span>
+				<span id="nameTitularHeader"><strong>${user}</strong></span>							
 			</span>
 			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 			<input id="logout" 		name="logout" 		type="button" 	value="" style="border:none;float: right;" onclick="javascript:formSubmit();"/>			

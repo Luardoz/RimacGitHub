@@ -18,7 +18,7 @@ public class WorkFlow implements Serializable{
 	private String cadena;
 	private String idewfori;
 	private MultipartFile archivoAdjunto;
-	private String producto;
+	private String producto;	
 	
 	public BigDecimal getIdewf() {
 		return idewf;

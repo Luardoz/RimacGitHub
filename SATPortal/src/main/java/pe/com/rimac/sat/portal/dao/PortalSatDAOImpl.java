@@ -1,5 +1,6 @@
 package pe.com.rimac.sat.portal.dao;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -17,15 +18,21 @@ import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
+import org.springframework.jdbc.core.support.SqlLobValue;
+import org.springframework.jdbc.support.lob.DefaultLobHandler;
 import org.springframework.stereotype.Repository;
 
 import oracle.jdbc.OracleTypes;
 import pe.com.rimac.sat.portal.bean.ComboBox;
+import pe.com.rimac.sat.portal.bean.Incidente;
 import pe.com.rimac.sat.portal.bean.Response;
+import pe.com.rimac.sat.portal.bean.Tarea;
 import pe.com.rimac.sat.portal.bean.WorkFlow;
 import pe.com.rimac.sat.portal.dao.mapper.ComboProductoMapper;
 import pe.com.rimac.sat.portal.dao.mapper.ComboSistemaMapper;
 import pe.com.rimac.sat.portal.dao.mapper.ComboTipoCasoMapper;
+import pe.com.rimac.sat.portal.dao.mapper.IncidenteMapper;
+import pe.com.rimac.sat.portal.dao.mapper.TareaMapper;
 import pe.com.rimac.sat.portal.exception.DBException;
 import pe.com.rimac.sat.portal.util.Properties;
 
@@ -212,7 +219,15 @@ public class PortalSatDAOImpl implements PortalSatDAO{
         SimpleJdbcCall objJdbcCall = null;
 		logger.info(traza + "<---------- Inicio método saveWorkFlowDB ---------->");
 		
-		try{
+		try{			
+			logger.info(traza + "Procesando el archivo adjunto para guardar en la BD");			
+			String fileName = bean.getArchivoAdjunto().getOriginalFilename();
+			String typeFile = bean.getArchivoAdjunto().getOriginalFilename().substring(bean.getArchivoAdjunto().getOriginalFilename().lastIndexOf(".") + 1);
+			String serverFileName = bean.getArchivoAdjunto().getOriginalFilename().substring(0, bean.getArchivoAdjunto().getOriginalFilename().lastIndexOf(".")) 
+									+ timeStart 
+									+ bean.getArchivoAdjunto().getOriginalFilename().substring(bean.getArchivoAdjunto().getOriginalFilename().lastIndexOf("."));
+			String byteSize =  bean.getArchivoAdjunto().getBytes().length + "";
+			
 			logger.info(traza + "Registrando en BD: " + properties.cBD_SAT_NOMBRE);
 			logger.info(traza + "Tiempo máximo de conexión: " + properties.cBD_SAT_TIMEOUT_CONEXION);			
 			logger.info(traza + "Esquema: " + properties.cBD_WORKFLOW_OWNER);
@@ -226,7 +241,13 @@ public class PortalSatDAOImpl implements PortalSatDAO{
 			logger.info(traza + "Input [a_idpaplicacion= " + bean.getSitemas() + "]");
 			logger.info(traza + "Input [a_idpservicio= " + null + "]");
 			logger.info(traza + "Input [a_descripcion= " + bean.getDescripcion() + "]");
-			logger.info(traza + "Input [a_idproducto= " + bean.getProducto() + "]");			
+			logger.info(traza + "Input [a_idproducto= " + bean.getProducto() + "]");
+			logger.info(traza + "Input [a_archivoblob= " + bean.getArchivoAdjunto() + "]");
+			logger.info(traza + "Input [a_nomarchivo= " + fileName + "]");
+			logger.info(traza + "Input [a_nomarchivo2= " + serverFileName + "]");
+			logger.info(traza + "Input [a_extension= " + typeFile + "]");
+			logger.info(traza + "Input [a_bytes= " + byteSize + "]");
+			logger.info(traza + "Input [a_ideentregable= " + properties.cSP_REGISTRO_WORKFLOW_IDENTREGABLE + "]");
 			
 			objJdbcCall = new SimpleJdbcCall(satDS)
     				.withoutProcedureColumnMetaDataAccess()
@@ -241,7 +262,13 @@ public class PortalSatDAOImpl implements PortalSatDAO{
 		            					new SqlParameter("a_idpaplicacion", OracleTypes.VARCHAR),
 		            					new SqlParameter("a_idpservicio", OracleTypes.VARCHAR),
 		            					new SqlParameter("a_descripcion", OracleTypes.VARCHAR),
-		            					new SqlParameter("a_idproducto", OracleTypes.VARCHAR)
+		            					new SqlParameter("a_idproducto", OracleTypes.VARCHAR),
+		            					new SqlParameter("a_archivoblob", OracleTypes.BLOB),
+		            					new SqlParameter("a_nomarchivo", OracleTypes.VARCHAR),
+		            					new SqlParameter("a_nomarchivo2", OracleTypes.VARCHAR),
+		            					new SqlParameter("a_extension", OracleTypes.VARCHAR),
+		            					new SqlParameter("a_bytes", OracleTypes.VARCHAR),
+		            					new SqlParameter("a_ideentregable", OracleTypes.NUMBER)
 		                                );
 			
 			SqlParameterSource objParametrosIN = new MapSqlParameterSource()
@@ -253,17 +280,24 @@ public class PortalSatDAOImpl implements PortalSatDAO{
 		            .addValue("a_idpaplicacion", bean.getSitemas())
 		            .addValue("a_idpservicio", null)
 		            .addValue("a_descripcion", bean.getDescripcion())
-		            .addValue("a_idproducto", bean.getProducto());
+		            .addValue("a_idproducto", bean.getProducto())
+		            .addValue("a_archivoblob", new SqlLobValue(new ByteArrayInputStream(bean.getArchivoAdjunto().getBytes()), 
+		            		bean.getArchivoAdjunto().getBytes().length, new DefaultLobHandler()), OracleTypes.BLOB)
+		            .addValue("a_nomarchivo", fileName)
+		            .addValue("a_nomarchivo2", serverFileName)
+		            .addValue("a_extension", typeFile)
+		            .addValue("a_bytes", byteSize)
+		            .addValue("a_ideentregable", properties.cSP_REGISTRO_WORKFLOW_IDENTREGABLE);
 			
 			Map<String, Object> resultado = objJdbcCall.execute(objParametrosIN);			
 			
 			if(resultado != null && !resultado.isEmpty()){
 				response.setCodResp(properties.cCODIGO_EXITO_ESTANDAR);
 				response.setObject(resultado.get("a_idewf"));
-				response.setMsjResp("Se registró satisfactoriamente el WorkFlow");
+				response.setMsjResp("Se registró satisfactoriamente su solicitud. Se generó el Ticket <strong>" + resultado.get("a_idewf")+"</strong>");
 			}else{
 				response.setCodResp(properties.cCODIGO_ERROR_ESTANDAR);
-				response.setMsjResp("No se pudo registrar el WorkFlow");
+				response.setMsjResp("No se pudo registrar su solicitud. Por favor intente mas tarde");
 			}
 			
 		}catch(Exception e){			
@@ -276,6 +310,116 @@ public class PortalSatDAOImpl implements PortalSatDAO{
 		}
 		
 		return response;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Incidente> getIncidentes(String cadenaTraza, String codUsuario) throws DBException {
+		String traza = cadenaTraza + "[getIncidentes]";
+		long timeStart = System.currentTimeMillis();
+		List<Incidente> resultado = new ArrayList<Incidente>();
+		JdbcTemplate   objJdbcTemplate = null;
+        SimpleJdbcCall objJdbcCall = null;
+		logger.info(traza + "<---------- Inicio método getIncidentes --------->");
+		try{
+			logger.info(traza + "Consultando a BD: " + properties.cBD_SAT_NOMBRE);
+			logger.info(traza + "Tiempo máximo de conexión: " + properties.cBD_SAT_TIMEOUT_CONEXION);
+			logger.info(traza + "Tiempo máximo de consulta: " + properties.cBD_SAT_TIMEOUT_CONSULTA);
+			logger.info(traza + "Esquema: " + properties.cBD_WORKFLOW_OWNER);
+			logger.info(traza + "Paquete: " + properties.cPQ_WF_SEGUIMIENTO);
+			logger.info(traza + "Procedimiento: " + properties.cSP_CONSULTA_WORKFLOW);
+			logger.info(traza + "Input: [a_codusu = " + codUsuario + "]");
+						
+			objJdbcTemplate = new JdbcTemplate(satDS);
+			objJdbcTemplate.setQueryTimeout(properties.cBD_SAT_TIMEOUT_CONSULTA);
+			
+			objJdbcCall = new SimpleJdbcCall(objJdbcTemplate)
+    				.withoutProcedureColumnMetaDataAccess()
+		            .withSchemaName(properties.cBD_WORKFLOW_OWNER)
+		            .withCatalogName(properties.cPQ_WF_SEGUIMIENTO)
+		            .withProcedureName(properties.cSP_CONSULTA_WORKFLOW)
+		            .declareParameters( new SqlParameter("a_codusu", OracleTypes.VARCHAR),
+		            					new SqlOutParameter("a_cursor", OracleTypes.CURSOR, null,
+				            					new IncidenteMapper())
+		                                );
+			
+			SqlParameterSource objParametrosIN = new MapSqlParameterSource()
+		            .addValue("a_codusu", codUsuario);
+			
+			Map<String, Object> res = objJdbcCall.execute(objParametrosIN);
+			
+			if(res != null && !res.isEmpty()){
+				resultado = (List<Incidente>) res.get("a_cursor");
+				logger.info(traza + "Lista obtenida! Cantidad de elementos: " + + resultado.size());												
+			}else{				
+				logger.info(traza + "No se pudo obtener lista");
+				resultado.clear();
+			}
+			
+		}catch(Exception e){
+			logger.error(traza + "Exception: ", e);
+			throw new DBException(properties.cCODIGO_ERROR_BD, e.getMessage(), 
+					properties.cBD_WORKFLOW_OWNER + "." + properties.cPQ_WF_SEGUIMIENTO + "." + properties.cSP_CONSULTA_WORKFLOW, 
+					properties.cBD_SAT_NOMBRE, e);
+		}finally{
+			logger.info(traza + "<---------- Fin método getIncidentes. Tiempo total de procesamiento: " + (System.currentTimeMillis() - timeStart) + "(ms) ---------->");
+		}
+		return resultado;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Tarea> getTareasDB(String cadenaTraza, int idewf) throws DBException {
+		String traza = cadenaTraza + "[getTareasDB]";
+		long timeStart = System.currentTimeMillis();
+		List<Tarea> resultado = new ArrayList<Tarea>();
+		JdbcTemplate   objJdbcTemplate = null;
+        SimpleJdbcCall objJdbcCall = null;
+		logger.info(traza + "<---------- Inicio método getTareasDB --------->");
+		try{
+			logger.info(traza + "Consultando a BD: " + properties.cBD_SAT_NOMBRE);
+			logger.info(traza + "Tiempo máximo de conexión: " + properties.cBD_SAT_TIMEOUT_CONEXION);
+			logger.info(traza + "Tiempo máximo de consulta: " + properties.cBD_SAT_TIMEOUT_CONSULTA);
+			logger.info(traza + "Esquema: " + properties.cBD_WORKFLOW_OWNER);
+			logger.info(traza + "Paquete: " + properties.cPQ_PORTAL);
+			logger.info(traza + "Procedimiento: " + properties.cSP_CONSULTA_TAREAS);
+			logger.info(traza + "Input: [a_idewf = " + idewf + "]");
+						
+			objJdbcTemplate = new JdbcTemplate(satDS);
+			objJdbcTemplate.setQueryTimeout(properties.cBD_SAT_TIMEOUT_CONSULTA);
+			
+			objJdbcCall = new SimpleJdbcCall(objJdbcTemplate)
+    				.withoutProcedureColumnMetaDataAccess()
+		            .withSchemaName(properties.cBD_WORKFLOW_OWNER)
+		            .withCatalogName(properties.cPQ_PORTAL)
+		            .withProcedureName(properties.cSP_CONSULTA_TAREAS)
+		            .declareParameters( new SqlParameter("a_idewf", OracleTypes.NUMBER),
+		            					new SqlOutParameter("a_cursor", OracleTypes.CURSOR, null,
+				            					new TareaMapper())
+		                                );
+			
+			SqlParameterSource objParametrosIN = new MapSqlParameterSource()
+		            .addValue("a_idewf", 32);
+			
+			Map<String, Object> res = objJdbcCall.execute(objParametrosIN);
+			
+			if(res != null && !res.isEmpty()){
+				resultado = (List<Tarea>) res.get("a_cursor");
+				logger.info(traza + "Lista obtenida! Cantidad de elementos: " + + resultado.size());												
+			}else{				
+				logger.info(traza + "No se pudo obtener lista");
+				resultado.clear();
+			}
+			
+		}catch(Exception e){
+			logger.error(traza + "Exception: ", e);
+			throw new DBException(properties.cCODIGO_ERROR_BD, e.getMessage(), 
+					properties.cBD_WORKFLOW_OWNER + "." + properties.cPQ_PORTAL + "." + properties.cSP_CONSULTA_TAREAS, 
+					properties.cBD_SAT_NOMBRE, e);
+		}finally{
+			logger.info(traza + "<---------- Fin método getTareasDB. Tiempo total de procesamiento: " + (System.currentTimeMillis() - timeStart) + "(ms) ---------->");
+		}
+		return resultado;
 	}
 	
 }
