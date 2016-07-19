@@ -26,8 +26,7 @@
 			value="0"/>		    
 	<div id="todo">
 		
-		<div>
-		
+		<div>		
 			<div class="loginv2-container" style="position: relative;">
 		
 				<a href="http://www.rimac.com.pe/">
