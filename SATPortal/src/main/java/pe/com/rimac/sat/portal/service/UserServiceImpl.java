@@ -71,11 +71,11 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public List<Incidente> getIncidenteList(String cadenaTraza, String codUsu) throws DBException {
+	public List<Incidente> getIncidenteList(String cadenaTraza, String codUsu, Integer idestado, Integer idwf) throws DBException {
 		String traza = cadenaTraza + "[getIncidenteList]";	
 		List<Incidente> response = new ArrayList<Incidente>();
 		logger.info(traza + "<------------- Inicio metodo getIncidenteList ------------->");				
-		response = portalSatDAO.getIncidentes(cadenaTraza, codUsu);		
+		response = portalSatDAO.getIncidentes(cadenaTraza, codUsu, idestado, idwf);		
 		logger.info(traza + "<------------- Fin metodo getIncidenteList ------------->");
 		return response;
 	}
@@ -88,6 +88,28 @@ public class UserServiceImpl implements UserService{
 		response = portalSatDAO.getTareasDB(cadenaTraza, idewf);		
 		logger.info(traza + "<------------- Fin metodo getTareas ------------->");
 		return response;
+	}
+
+	@Override
+	public Map<String, Object> getArchivoTarea(String cadenaTraza, int idArchivo) throws DBException {
+		String traza = cadenaTraza + "[getArchivoTarea]";		
+		Map<String, Object> resultado = new HashMap<String, Object>();		
+		logger.info(traza + "<------------- Inicio metodo getCombosFormRegister ------------->");
+		resultado = portalSatDAO.getArchivoTareaDB(cadenaTraza, idArchivo);
+		logger.info(traza + "<------------- Fin metodo getCombosFormRegister ------------->");	
+		return resultado;
+	}
+
+	@Override
+	public List<ComboBox> getComboEstado(String cadenaTraza) throws DBException {
+		String traza = cadenaTraza + "[getComboEstado]";		
+		List<ComboBox> listaEstado = new ArrayList<ComboBox>();
+		
+		logger.info(traza + "<------------- Inicio metodo getComboEstado ------------->");						
+		listaEstado = portalSatDAO.getComboEstadoWF(traza);		
+		logger.info(traza + "<------------- Fin metodo getComboEstado ------------->");
+		
+		return listaEstado;
 	}
 
 }

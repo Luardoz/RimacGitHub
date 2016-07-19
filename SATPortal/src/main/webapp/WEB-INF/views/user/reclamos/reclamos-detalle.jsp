@@ -1,4 +1,5 @@
-<form id="detalleReclamoForm" rol="form" enctype="multipart/form-data">
+<!-- <form id="detalleReclamoForm" rol="form" enctype="multipart/form-data"> -->
+<form id="detalleReclamoForm" enctype="multipart/form-data">
  		<div id="Paso1Rec" style="display:none">
 			<div class="reclamos" id="divValidate">
 				

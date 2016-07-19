@@ -5,7 +5,7 @@
 			
 			<li class="panel" >
 				<a 	href="#" 
-					id="panelSeguros"
+					id="panelMisReclamos"
 					data-url="serviceUser/reclamos-mis-reclamos" 
 					data-toggle="collapse" 
 					data-parent="#accordion" 

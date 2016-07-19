@@ -27,11 +27,7 @@
 					<img width="225px;" alt="" title="Navegadores soportados" src="<%=request.getContextPath()%>/img/rimac/navegadores-soportados.jpg">
 				</div>
 				
-				<div style="font-weight: bold; text-align: left; margin-top: 10px; line-height: 2;">
-				
-					<div>
-						<span>INTERNET EXPLORER : 8.0 en adelante</span>
-					</div>
+				<div style="font-weight: bold; text-align: left; margin-top: 10px; line-height: 2;">							
 					<div>
 						<span>MOZILLA FIREFOX : 5.0 en adelante</span>
 					</div>

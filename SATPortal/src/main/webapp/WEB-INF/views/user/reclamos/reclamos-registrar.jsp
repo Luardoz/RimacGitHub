@@ -10,9 +10,9 @@
   <%-- <form:form action="serviceUser/reclamos-registrar/nuevo?${_csrf.parameterName}=${_csrf.token}"  enctype="multipart/form-data" id="form-reclamos-registrar" method="post" modelAttribute="reclamo"> --%>
   <form:form enctype="multipart/form-data" id="form-reclamos-registrar" method="post" modelAttribute="reclamo">
     <div class="form-group">    	 
-        <label class="control-label col-xs-3  required">Tipo de Caso:</label>
+        <label class="control-label col-xs-3  required">Tipo:</label>
         <div class="col-xs-5">
-         <select title="Aqui el tooltip..." class="selectpicker form-control" id="idtipocaso" name="idtipocaso">
+         <select title="" class="selectpicker form-control" id="idtipocaso" name="idtipocaso">
          	<option value="">Seleccione</option>
          	<c:forEach items="${lstTipoCaso}" var="comboBox">
                 <option value="${comboBox.value}">${comboBox.descripcion}</option>
@@ -24,7 +24,7 @@
     <div class="form-group">
         <label class="control-label col-xs-3 required">Sistema:</label>
         <div class="col-xs-5">
-         <select title="Aqui el tooltip..." class="selectpicker form-control" id="idsistema" name="idsistema">
+         <select title="" class="selectpicker form-control" id="idsistema" name="idsistema">
          	<option value="">Seleccione</option>
          	<c:forEach items="${lstSistema}" var="comboBox">
                 <option value="${comboBox.value}">${comboBox.descripcion}</option>
@@ -36,7 +36,7 @@
     <div class="form-group">
         <label class="control-label col-xs-3 required">Producto:</label>
         <div class="col-xs-5">
-         <select title="Aqui el tooltip..." class="selectpicker form-control" id="idproducto" name="idproducto">
+         <select title="" class="selectpicker form-control" id="idproducto" name="idproducto">
          	<option value="">Seleccione</option>
          	 <c:forEach items="${lstProducto}" var="comboBox">
                 <option value="${comboBox.value}">${comboBox.descripcion}</option>
@@ -62,7 +62,7 @@
     <div class="form-group">
         <label class="control-label col-xs-3 required">Titulo:</label>
         <div class="col-xs-9">
-            <input title="Aqui el tooltip..." type="text" class="form-control" id="desctitulo" name="desctitulo">
+            <input title="" type="text" class="form-control" id="desctitulo" name="desctitulo">
              <div class="result"></div>
         </div>
     </div>
@@ -70,7 +70,7 @@
     <div class="form-group">
         <label class="control-label col-xs-3 required">Detalle del Caso:</label>
         <div class="col-xs-9">
-            <textarea title="Aqui el tooltip..." rows="6" class="form-control" id="descdetallecaso" name="descdetallecaso" style="resize: none "></textarea>
+            <textarea title="" rows="6" class="form-control" id="descdetallecaso" name="descdetallecaso" style="resize: none "></textarea>
              <div class="result"></div>
         </div>
     </div>
@@ -81,7 +81,8 @@
             <!-- <input type="button" id="aniadirArchivo" name="aniadirArchivo" value="Adicionar adjunto" onclick="aniadirFilaAdjunto();">
             <table id="tablaficheros"> 	        
 	        </table>  -->
-	        <input title="Aqui el tooltip..." type="file" class="form-control" id="file" name="file">
+	        <input title="Máximo 8MB permitidos" type="file" class="form-control" id="file" name="file">
+	        <div class="result"></div>
          </div>
          
     </div>
@@ -97,11 +98,12 @@
     </div>
     <div class="form-group" align="right">
         <div class="col-xs-offset-3 col-xs-9">
-           <a class='btn btn-primary' onclick='registrarReclamo();' id='linkRegistrar'>Registrar</a>
+           <a class='btn btn-primary' onclick='confirmarRegistro();' id='linkRegistrar'>Registrar</a>
         </div>
     </div>
     </form:form>
-
+	<div id="content-dialog">
+	</div>
 	<div id="mensajes-registrar" hidden="hidden">
 		<div class="col-md-12">
 			<div id="container-mensaje"></div>

@@ -30,8 +30,9 @@
                            http://www.springframework.org/schema/tx/spring-tx.xsd">
 
 	<context:annotation-config />
-	<context:component-scan base-package="pe.com.rimac.sat" />	
+	<context:component-scan base-package="pe.com.rimac.sat.portal" />	
 	<context:property-placeholder location="classpath:satportal.properties" />
+	<!-- <context:property-placeholder location="file:${RUTA_ARCH_CONF}SAS/SAT/properties/satportal.properties" /> -->
 	
 	<import resource="spring/spring-config.xml" />
 	<import resource="spring/spring-datasource.xml" />		

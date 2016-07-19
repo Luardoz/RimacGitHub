@@ -1,6 +1,7 @@
 package pe.com.rimac.sat.portal.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import pe.com.rimac.sat.portal.bean.ComboBox;
 import pe.com.rimac.sat.portal.bean.Incidente;
@@ -15,6 +16,8 @@ public interface PortalSatDAO {
 	List<ComboBox> getComboProducto(String cadenaTraza) throws DBException;
 	List<ComboBox> getComboSistema(String cadenaTraza) throws DBException;	
 	Response saveWorkFlowDB(String cadenaTraza, WorkFlow bean) throws DBException;
-	List<Incidente> getIncidentes(String cadenaTraza, String codUsuario) throws DBException;
+	List<Incidente> getIncidentes(String cadenaTraza, String codUsuario, Integer idestado, Integer idwf) throws DBException;
 	List<Tarea> getTareasDB(String cadenaTraza, int idewf) throws DBException;
+	Map<String, Object> getArchivoTareaDB(String cadenaTraza, int idArchivo) throws DBException;
+	List<ComboBox> getComboEstadoWF(String cadenaTraza) throws DBException;
 }

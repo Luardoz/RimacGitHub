@@ -1,14 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%><%@ page session="false"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 
 <div id="datos-cliente" class="header-section2">	
+<!-- j_spring_security_logout -->
 	<form method="post" id="logoutForm" name="formlogout" action="<c:url value="/logout" />" >
+		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 		<div id="header-section2">
 			<i class="m-icn-locked"></i>			
 			<span id="avatar">
-				<span id="nameTitularHeader"><strong>${user}</strong></span>							
-			</span>
-			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+				<span id="nameTitularHeader"><strong>
+				<%-- <sec:authorize access="isAuthenticated()">
+						<%=request.getUserPrincipal().getName()%>
+				</sec:authorize> --%>
+				<c:out value="${sessionScope.user.idUsuario}" />
+				</strong></span>							
+			</span>			
 			<input id="logout" 		name="logout" 		type="button" 	value="" style="border:none;float: right;" onclick="javascript:formSubmit();"/>			
 			<input id="mobile" 		name="mobile" 		type="hidden" 	value="0"/>
 		</div>

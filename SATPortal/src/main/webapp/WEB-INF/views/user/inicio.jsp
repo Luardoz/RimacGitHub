@@ -11,7 +11,11 @@
 	</head>
 	<script>VP_GO_ZONA = '/zonaprivada';</script>
 	<script src="<%=request.getContextPath()%>/js/rimac/googletagmanager.js"></script>
-	
+	<script>
+		$(document).ready(function() {
+			$("#panelMisReclamos").click();
+		});
+	</script>
 	<body>	
 		 	
 		<!-- Google Tag Manager -->

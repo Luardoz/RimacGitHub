@@ -14,6 +14,8 @@ public interface UserService {
 
 	Map<String, List<ComboBox>> getCombosFormRegister(String cadenaTraza) throws DBException;
 	Response saveWorkFlow(String cadenaTraza, WorkFlow bean) throws DBException;
-	List<Incidente> getIncidenteList(String cadenaTraza, String codUsu) throws DBException;
+	List<Incidente> getIncidenteList(String cadenaTraza, String codUsu, Integer idestado, Integer idwf) throws DBException;
 	List<Tarea> getTareas(String cadenaTraza, int idewf) throws DBException;
+	Map<String, Object> getArchivoTarea(String cadenaTraza, int idArchivo) throws DBException;
+	List<ComboBox> getComboEstado(String cadenaTraza) throws DBException;
 }

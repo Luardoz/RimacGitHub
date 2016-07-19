@@ -33,8 +33,7 @@
 	function loadPage(){
 		
 		$this 		= $(this);
-		var href 	= $this.attr("data-url");
-		console.log(href);
+		var href 	= $this.attr("data-url");		
 		if(href  != undefined){
 			
 			var path = getFileName(href);

@@ -6832,3 +6832,15 @@ ol {
   padding: 0;
   list-style-type: none;
 }	
+
+/*CSS para Dialog personalizado 180716*/
+.ui-dialog-titlebar-close{
+	float: right;
+}
+.ui-dialog-titlebar{
+	color: #ffffff !important;
+	padding: 5px;
+}
+.ui-dialog-buttonset{	
+	float: right;	
+}

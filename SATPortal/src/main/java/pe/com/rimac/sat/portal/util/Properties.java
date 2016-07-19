@@ -18,13 +18,17 @@ public class Properties {
 	@Value("${bd.workflow.owner}")
 	public String cBD_WORKFLOW_OWNER;
 	@Value("${bd.gestion.owner}")
-	public String cBD_GESTION_OWNER;	
+	public String cBD_GESTION_OWNER;
+	@Value("${bd.comunes.owner}")
+	public String cBD_COMUNES_OWNER;	
 	@Value("${pq.portal}")
 	public String cPQ_PORTAL;
 	@Value("${pq.wf.seguimiento}")
 	public String cPQ_WF_SEGUIMIENTO;
 	@Value("${pq.comun.ges}")
 	public String cPQ_COMUN_GES;
+	@Value("${pq.comun.seguridad}")
+	public String cPQ_COMUN_SEGURIDAD;	
 	@Value("${sp.combo.tipocaso}")
 	public String cSP_COMBO_TIPOCASO;
 	@Value("${sp.combo.producto}")
@@ -45,6 +49,10 @@ public class Properties {
 	public String cSP_CONSULTA_TAREAS;
 	@Value("${sp.consulta.documento}")
 	public String cSP_CONSULTA_DOCUMENTO;
+	@Value("${sp.consulta.usuario}")
+	public String cSP_CONSULTA_USUARIO;
+	@Value("${sp_consulta.estado.wf}")
+	public String cSP_CONSULTA_ESTADO_WF;
 	
 	/*
 	 * PROPIEDADES PARA JSP

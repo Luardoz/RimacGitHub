@@ -89,4 +89,7 @@
 <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
 --%>
 <%-- FIN REQ C.FONG HTTPS --%>
+
+<!-- JS especificos SAT Portal -->
 <script src="<%=request.getContextPath()%>/js/rimac/user/user.js"></script>
+<script src="<%=request.getContextPath()%>/js/rimac/main.js"></script>

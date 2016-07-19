@@ -4,21 +4,23 @@ import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import pe.com.rimac.sat.portal.bean.UsuarioRimac;
+import pe.com.rimac.sat.portal.exception.DBException;
+import pe.com.rimac.sat.portal.service.SeguridadService;
 import pe.com.rimac.sat.portal.util.Properties;
 
 /**
@@ -30,47 +32,108 @@ public class HomeController {
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
 	@Autowired
+	private SeguridadService seguridadService;
+	
+	@Autowired
 	private Properties properties;
 	
     @RequestMapping(value = { "/" }, method = RequestMethod.GET)
-    public String homePage(ModelMap model) {
-    	logger.info("[homePage]Devolviendo Login");        
+    public String homePage(HttpServletRequest request) {
+    	String ipAddress = request.getHeader("X-FORWARDED-FOR");
+		String userAgent = request.getHeader("user-agent");
+		if (ipAddress == null) {
+			ipAddress = request.getRemoteAddr();
+		}
+    	logger.info("[homePage]Devolviendo Login para " + ipAddress + " en: " + userAgent);        
         return "public/login";
     }
  
 	/**
 	 * @return devuelve pagina de acuerdo al rol
 	 */
-	@RequestMapping(value = "/autentificacion/decisor", method = RequestMethod.GET)
-	public String decisor(HttpServletRequest request, ModelMap model) {
+//	@RequestMapping(value = "/autentificacion/decisor", method = RequestMethod.GET)
+//	public String decisor(HttpServletRequest request, ModelMap model) throws DBException{
+//	
+//		String page = "";
+//		String traza = "[decisor]";
+//		logger.info(traza + "Identificando rol");		
+//		Collection<? extends GrantedAuthority> authorities= loggedUserAuthorities();		
+//		 if (authorities.contains(new SimpleGrantedAuthority(properties.cAPPLICATION_ROLE_ADMIN))) {
+//			 logger.info(traza + "Acceso administrador");			 
+//			 page = "redirect:../admin";
+//		 }else if (authorities.contains(new SimpleGrantedAuthority(properties.cAPPLICATION_ROLE_USER))) {
+//			 logger.info(traza + "Acceso usuario");
+//			 logger.info(traza + "Buscando los datos del usuario en la BD");
+//			 UsuarioRimac usuario = seguridadService.getUsuario(traza, getPrincipal(), "");
+//			 
+//			if(usuario != null){
+//				HttpSession session = request.getSession();
+//				session.setAttribute("user", usuario);
+//				page = "redirect:../user";
+//			}else{
+//				page = "redirect:/login?error=No existe el usuario. Por favor ingrese las credenciales correctamente";				
+//			}			 		    
+//		 }
+//		
+//		return page;
+//	}
 	
+	@RequestMapping(value = "/autentificacion/decisor", method = RequestMethod.POST)	
+	public String decisor(@RequestParam("user") String user, @RequestParam("password") String password
+			, HttpServletRequest request, HttpServletResponse response){
+		
 		String page = "";
-		logger.info("[decisor]Identificando rol");		
-		Collection<? extends GrantedAuthority> authorities= loggedUserAuthorities();		
-		 if (authorities.contains(new SimpleGrantedAuthority(properties.cAPPLICATION_ROLE_ADMIN))) {
-			 logger.info("[decisor]Acceso administrador");			 
-			 page = "redirect:../admin";
-		 }else if (authorities.contains(new SimpleGrantedAuthority(properties.cAPPLICATION_ROLE_USER))) {
-			 logger.info("[decisor]Acceso usuario");
-		     page = "redirect:../user";
-		 }
+		String traza = "[decisor]";
+		UsuarioRimac usuario;
+//		ObjectMapper mapper = new ObjectMapper();
+		logger.info(traza + "Consultando credenciales de usuario");			
+		response.setCharacterEncoding("UTF-8");
+		try{
+//			logger.info(traza + "JSON: " + object);
+//			usuario = mapper.readValue(object, UsuarioRimac.class);
+			usuario = seguridadService.getUsuario(traza, user, password);
+			
+			if(usuario != null){
+				HttpSession session = request.getSession();
+				session.setAttribute("user", usuario);
+				page = "redirect:../user";
+			}else{
+				page = "redirect:/login?error=No existe el usuario. Por favor ingrese las credenciales correctamente";				
+			}
+		}catch(DBException e){
+			logger.error(traza + "Ocurrió un error en la BD");
+			page = "redirect:/login?error=Error accediendo a la BD. Intentelo mas tarde";			
+		}
 		
 		return page;
 	}
- 
+    
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String loginPage() {
-    	logger.info("[loginPage]Devolviendo Login"); 
+    public String loginPage(HttpServletRequest request) {
+    	String ipAddress = request.getHeader("X-FORWARDED-FOR");
+		String userAgent = request.getHeader("user-agent");
+		if (ipAddress == null) {
+			ipAddress = request.getRemoteAddr();
+		}
+    	logger.info("[loginPage]Devolviendo Login para " + ipAddress + " en: " + userAgent);    	
         return "public/login";
     }
- 
-    @RequestMapping(value="/logout", method = RequestMethod.GET)
+    
+//    @RequestMapping(value="/logout", method = RequestMethod.GET)
+//    public String logoutPage (HttpServletRequest request, HttpServletResponse response) {
+//    	logger.info("Saliendo de la aplicación");
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        if (auth != null){    
+//            new SecurityContextLogoutHandler().logout(request, response, auth);
+//        }
+//        return "redirect:/login?logout";
+//    }
+    
+    @RequestMapping(value="/logout", method = RequestMethod.POST)
     public String logoutPage (HttpServletRequest request, HttpServletResponse response) {
     	logger.info("Saliendo de la aplicación");
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null){    
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-        }
+    	logger.info("Invalidando la sesion");
+        request.getSession().invalidate();
         return "redirect:/login?logout";
     }
  
@@ -81,7 +144,7 @@ public class HomeController {
         return "accessDenied";
     }
      
-    private String getPrincipal(){
+    public static String getPrincipal(){
         String userName = null;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
  

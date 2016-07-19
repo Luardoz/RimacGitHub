@@ -1,6 +1,10 @@
 /*
  * Beans lado cliente
  */
+function Usuario(idUsuario, clave){
+	this.idUsuario = idUsuario;
+	this.clave = clave;
+}
 function WorkFlow(idewf,idewfdef,descripcion,usuario,cadena,idewfori){
 	this.idewf = idewf;	  
 	this.idewfdef = idewfdef;
@@ -10,47 +14,83 @@ function WorkFlow(idewf,idewfdef,descripcion,usuario,cadena,idewfori){
 	this.idewfori = idewfori;
 }
 
-$(function() {
-	var token = $("meta[name='_csrf']").attr("content");
-	var header = $("meta[name='_csrf_header']").attr("content");
-	console.log(header + ': ' + token);
-	$(document).ajaxSend(function(e, xhr, options) {
-		xhr.setRequestHeader(header, token);
-	});
-});
-
 /*														
  * 	Funciones para el formulario de Registro de Reclamo
  */
-function aniadirFilaAdjunto(){
-	 var identificador = "filaAdjunto";
-	 var fileIndex;  
-	 var cantFila = $('#tablaficheros tr').length;
-	 if(cantFila > 0){
-		 fileIndex = Number($('#tablaficheros tr:last').attr("id").substring(identificador.length)) + 1;  
-	 }else{
-		 fileIndex = 0;  
-	 }
-	 
-     $('#tablaficheros').append(               
-               '<tr id="'+ identificador + fileIndex+'"><td style="padding: 10px 0px 0px 0px;">'+        
-                '   <input type="file" class="form-control" id="archivos['+ fileIndex +']" name="archivos['+ fileIndex +']" />'+  
-                '</td>'+
-                '<td style="padding: 10px 0px 0px 10px;">' +
-                '<input type="button" value="Borrar" onclick="borraFilaAdjunto(filaAdjunto'+fileIndex+');">' +
-                '</td>'+
-                '</tr>');     
+function validarFormRegistro(){
+	$("#form-reclamos-registrar").validate({
+		rules			: {
+							idtipocaso	: {
+									required 		: true
+							},
+							idsistema	: {
+									required 		: true									
+							},
+							idproducto	: {
+									required 		: true									
+							},
+							desctitulo	: {
+									required		: true
+							},
+							descdetallecaso	: {
+									required		: true
+							},
+							file		: {
+									required		: true
+							}
+					},
+		messages 		: {
+							idtipocaso 	: {
+									required		: "Campo obligatorio"									
+							},
+							idsistema 	: {
+									required		: "Campo obligatorio"									
+							},
+							idproducto 	: {
+									required		: "Campo obligatorio"									
+							},
+							desctitulo	: {
+									required		: "Campo obligatorio"
+							},
+							descdetallecaso	: {
+									required		: "Campo obligatorio"
+							},
+							file		: {
+									required		: "Campo obligatorio"
+							}
+					}
+	});	
 }
 
-function borraFilaAdjunto(idFila){
-	$(idFila).remove();
-
+function confirmarRegistro(){
+	validarFormRegistro();
+	if($("#form-reclamos-registrar").valid()){
+		$("#content-dialog").html('<div id="dialog-confirm" title="Confirmar transacción">' +
+									  '<p><span class=".modal.in .modal-dialog" style="float:left; margin:12px 12px 20px 0;"></span>¿Está seguro de registrar el ticket con los datos provistos?</p>'+
+									  '</div>');
+		
+		$( "#dialog-confirm" ).dialog({
+		      resizable: false,
+		      closeText: "",
+		      height: "auto",
+		      width: 400,
+		      modal: true,
+		      buttons: {
+		        "Confirmar": function() {
+		          $( this ).dialog( "close" );
+		          registrarReclamo();
+		        },
+		        "Cancelar": function() {
+		          $( this ).dialog( "close" );	          
+		        }
+		      }
+		    });
+	}else
+		return false;
 }
-
 function registrarReclamo(){
-//	$("#form-reclamos-registrar").submit();
+		
 	loadModalCargando();
-	
 	var formData = new FormData();
 	formData.append("fileBytes", file.files[0]);
 	formData.append("fileName", $("#file").val());
@@ -86,6 +126,11 @@ function registrarReclamo(){
 			$("#msj-result-reg-reclamo").html(response.msjResp);			
 			$("#mensajes-registrar").show();
 			
+			//Reseteando el formulario
+			$('#form-reclamos-registrar')[0].reset();			
+			var formulario = $('#form-reclamos-registrar').validate();			
+			formulario.resetForm();
+			
 			closeModalCargando();
 		},
 		error : function(a, b, c) {
@@ -107,27 +152,36 @@ function registrarReclamo(){
 /*														
  * 	Funciones para la consulta de Tickets
  */
-function traerJsonCompletoMisReclamos(nametable){
+function traerJsonCompletoMisReclamos(){
 	loadModalCargando();
+	var nametable	= 'misreclamos';
 	var a_codusu = $("#nameTitularHeader").text(); 
+	var estado = $("#idestado").val();
+	var ticket = $("#nticket").val();
+	
 	$.ajax({
 		type  		: "POST",
-		url   		: "serviceUser/reclamos-mis-reclamos/listar",
+		url   		: "serviceUser/reclamos-mis-reclamos/listar?codUsu="+a_codusu+"&estado="+estado+"&ticket="+ticket,
+//		url   		: "serviceUser/reclamos-mis-reclamos/listar",
 		cache 		: false,
 		async 		: false,						
-		data		: '',
-		beforeSend : function(xhr) {
-			xhr.setRequestHeader('codUsu', a_codusu);
-		},
+		data		: '' ,
+//		beforeSend : function(xhr) {
+//			xhr.setRequestHeader('codUsu', a_codusu);
+//			xhr.setRequestHeader('estado', estado);
+//			xhr.setRequestHeader('ticket', ticket);			
+//		},
 		success 	: function(data) {
-					if (data != 'undefined'){							
-						tablashtml(data, nametable);
-						closeModalCargando();
-					}else{
-						closeModalCargando();
-						$("#mis-reclamos").hide();
-						$("#sin-reclamos").show();
-					};
+//					if (data != 'undefined' && data.length > 0){							
+//						tablashtml(data, nametable);
+//						closeModalCargando();
+//					}else{
+//						closeModalCargando();
+//						$("#mis-reclamos").hide();
+//						$("#sin-reclamos").show();
+//					};
+					tablashtml(data, nametable);
+					closeModalCargando();
 		},
 		error : function(xhr, ajaxOptions, thrownError) {
 			closeModalCargando();
@@ -137,46 +191,15 @@ function traerJsonCompletoMisReclamos(nametable){
 }
 
 function tablashtml(jReclamos, name){
-	var cadenaTablas = 	'    <div class="row visible-md-block visible-sm-block visible-lg-block">'+
-					    '        <div class="table-responsive col-md-12">'+
-					    '            <table id="table-'+name+'" class="table table-hover table-bordered table-inter text-center">'+
-					    '                <thead>'+
-					    '                    <tr>'+
-						'                        <th class="text-center">N°</th>'+
-					    '                        <th class="text-center">Título</th>'+
-					    '                        <th class="text-center">Fecha Registro</th>'+
-					    '                        <th class="text-center">Fecha Atención</th>'+
-					    '                        <th class="text-center">Fecha Cierre</th>'+
-					    '                        <th class="text-center">Estado</th>'+
-					    '                        <th class="text-center">Tipo</th>'+
-					    '                        <th class="text-center">Tareas</th>'+
-					    '                    </tr>'+
-					    '                </thead>'+
-					    '                <tbody class="vcenter">'+
-					    '                </tbody>'+
-					    '            </table>'+
-					    '		 <br>'+
-					    '		 <div class="row" id="FilaBotones">'+
-				        '    	 	<div class="col-md-12">'+
-				        '    		</div>'+
-			        	'		 </div>'+
-					    '        </div>'+
-					    '   </div>';
-
-	$("#div-"+name).append(cadenaTablas);
-
 	var idTabla= '#table-'+name;
+	$(idTabla).dataTable().fnDestroy();
 	$(idTabla).DataTable({
 		"data"      : jReclamos,
 		"ordering"  : false,
-        "searching" : true,
+        "searching" : false,
         "paging"    : true,
         "bInfo"		: true,
-        "bAutoWidth": true,
-        "scrollX"	: true,
-//        "scrollY"	: "700px",
-//        "scrollCollapse": true,
-//        "paging":         true,
+        "bAutoWidth": false,
         "pagingType": "full_numbers" , 	
         "language": {		       
 	        "sProcessing":     "Procesando...",
@@ -210,28 +233,27 @@ function tablashtml(jReclamos, name){
 								   '<p id="fecatencion" name="fecatencion" style="display:none">'+full.fecatencion+'</p>'+
 								   '<p id="feccierre" name="feccierre" style="display:none">'+full.fecatencion+'</p>'+
 								   '<p id="descestado" name="descestado" style="display:none">'+full.descestado+'</p>' ; 
-							return a;},"sWidth": "15%"
+							return a;},"sWidth": "5%"
          				},
          				{ "data"        : "desctarea","sWidth": "15%"},
+         				{ "data"        : "descestado","sWidth": "10%"},
          				{ "data"        : "fecusu","sWidth": "15%"},
-         				{ "data"        : "fecatencion","sWidth": "15%"},
-         				{ "data"        : "feccierre","sWidth": "15%"},
-         				{ "data"        : "descestado","sWidth": "15%"},
+         				{ "data"        : "fecatencion","sWidth": "15%"},     				
          				{ "data"        : "desctipoinci","sWidth": "15%"}
          				,{ "data"        : "" ,"render" : function (data, type, full){
          									var param = full.idewf + ",\'"+ full.desctipoinci +"\'";
          									var a ='<a 	data-toggle="modal" onclick="javascript:buscarTareas('
 					 							   +full.idewf+',\''+full.desctipoinci+'\');"><img src="img/default/detach.png" width="20px" height="20px" border=0 align="center"> </a>';       					 							 			  
-											return a;},"sWidth": "15%"}
-                    ],
-        "fnDrawCallback": function () {
-	        		var table = $(idTabla).dataTable();
-	        		if(table.fnGetData().length ==0){
-	        		   table.parent().toggle(false);
-	        		   $("#idmensajeH6").text("El sistema no encontró Reclamos asociados al DNI.");
-	           		   $("#FilaBotones").hide();
-	        		}
-        }	        
+											return a;},"sWidth": "5%"}
+                    ]
+//        ,"fnDrawCallback": function () {
+//	        		var table = $(idTabla).dataTable();
+//	        		if(table.fnGetData().length ==0){
+//	        		   table.parent().toggle(false);
+//	        		   $("#idmensajeH6").text("El sistema no encontró Reclamos asociados al DNI.");
+//	           		   $("#FilaBotones").hide();
+//	        		}
+//        }	        
      });
 }
 
@@ -255,13 +277,45 @@ function armarResponsive(json, nametable){
 
 function buscarTareas(idewf,desctipoinci){	
 	
+	loadModalCargando();	
+	$.ajax({
+		type  		: "GET",
+		url   		: "serviceUser/reclamos-mis-reclamos/tareas",
+		cache 		: false,
+		async 		: false,						
+		data		: '',
+		beforeSend : function(xhr) {
+			xhr.setRequestHeader('idewf', idewf);					
+		},
+		success 	: function(data) {
+					if (data != 'undefined'){							
+						procesarTablaTareas(data);
+						closeModalCargando();
+					}else{
+						closeModalCargando();
+						loadModalMensaje('Informacion','<center>No se encontraron tareas para el Ticket.</center>','');
+					};
+		},
+		error : function(xhr, ajaxOptions, thrownError) {
+			closeModalCargando();
+			loadModalMensaje('Informacion','<center>No se encontraron tareas para el Ticket.</center>','');
+		}
+	});
+
+	$("#tituloTareas").html('Listado de Tareas - Ticket ' + idewf +' ('+ desctipoinci + ')')	
+	$("#content-mis-tareas").modal();				
+}	
+
+function procesarTablaTareas(jsonTareas){
+	$("#table-tareas").dataTable().fnDestroy();
+	
 	$("#table-tareas").DataTable({		
+		"data"      : jsonTareas,
 		"ordering"  : false,
         "searching" : true,
         "paging"    : true,
         "bInfo"		: true,
-        "bAutoWidth": true,
-        "scrollX"	: true,
+        "bAutoWidth": false,        
         "pagingType": "full_numbers" , 	
         "language": {		       
 	        "sProcessing":     "Procesando...",
@@ -287,18 +341,16 @@ function buscarTareas(idewf,desctipoinci){
 	    		"sSortDescending": ": Activar para ordenar la columna de manera descendente"
 	    	}
         },
-        "ajax" : {
-        	"url": "serviceUser/reclamos-mis-reclamos/tareas?idewf="+idewf,
-        	"type": "GET"        	
-        },
         "columns"   : [			                   			                   	 
 	                   
-         				{ data        : "descripcionTarea"},
-         				{ data        : "nombreArchivo"},
-         				{ data        : "idArchivo"}         					
-                    ]       
+         				{ "data"        : "descripcionTarea"},
+         				{ "data"        : "nombreArchivo"},
+         				{ "data"        : "" ,"render" : function (data, type, full){								
+								var a = '<a target="_blank" href="serviceUser/reclamos-mis-reclamos/tareas/descargarArchivo?idarchivo='+full.idArchivo+'" class="method-ajax list-group-item">Ver Documento</a>';       					 							 			  
+							return a;}
+         				}    					
+                    ]                  
      });
 	
-	$("#tituloTareas").html('Listado de Tareas - Ticket ' + idewf +' ('+ desctipoinci + ')')	
-	$("#content-mis-tareas").modal();				
-}	
+	
+}

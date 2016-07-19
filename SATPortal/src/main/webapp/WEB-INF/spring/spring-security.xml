@@ -1,34 +1,44 @@
-<beans:beans xmlns="http://www.springframework.org/schema/security"
-    xmlns:beans="http://www.springframework.org/schema/beans"
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:sec="http://www.springframework.org/schema/security"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
     http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
       
-    <http auto-config="false" use-expressions="true">
-    	<intercept-url pattern="/autentificacion/decisor" access="isAuthenticated()" />
-        <intercept-url pattern="/" access="permitAll" />        
-        <intercept-url pattern="/admin" access="hasRole('ADMIN')" />
-        <intercept-url pattern="/user" access="hasAnyRole('ADMIN','USER')" />            
-        <intercept-url pattern="/js/user/*" access="hasAnyRole('ADMIN','USER')" />        
-        <intercept-url pattern="/serviceUser/*" access="hasAnyRole('ADMIN','USER')" />               
-        <form-login  login-page="/login" username-parameter="user" password-parameter="password" 
-        	authentication-failure-url="/login?error" 
-        	default-target-url="/autentificacion/decisor"/>
-        <logout invalidate-session="true" logout-success-url="/login?status=logout" delete-cookies="JSESSIONID" />	
-        <csrf/>
-    </http>
+    <sec:http auto-config="false" use-expressions="true">
+    	<sec:intercept-url pattern="/autentificacion/decisor" access="isAuthenticated()" />
+        <sec:intercept-url pattern="/" access="permitAll" />        
+        <sec:intercept-url pattern="/j_spring_security_check" access="isAnonymous()" />
+        <sec:intercept-url pattern="/admin" access="hasRole('ADMIN')" />
+        <sec:intercept-url pattern="/user" access="hasAnyRole('ADMIN','USER')" />                   
+        <!-- <sec:intercept-url pattern="/js/rimac/user/*" access="hasAnyRole('ADMIN','USER')" />      -->   
+        <sec:intercept-url pattern="/serviceUser/*" access="hasAnyRole('ADMIN','USER')" />               
+        <sec:form-login  login-page="/login" username-parameter="user" password-parameter="password" 
+        	authentication-failure-url="/login?denied" 
+        	default-target-url="/autentificacion/decisor"
+        	authentication-failure-handler-ref="securityLoginFailureHandler" 
+        	authentication-success-handler-ref="securityLoginSuccessHandler"/>
+        <sec:logout invalidate-session="true" 
+        	logout-success-url="/login?status=logout" 
+        	delete-cookies="JSESSIONID" 
+        	logout-url="/j_spring_security_logout" />	
+        <sec:csrf />
+		<sec:headers>
+			<sec:cache-control />
+			<sec:xss-protection enabled="true" />
+		</sec:headers>
+    </sec:http>
   
-    <authentication-manager >
-        <authentication-provider>
-            <user-service>
-                <user name="user1"  password="abc123"  authorities="ROLE_USER" />
-                <user name="SSAAVEDRAV"  password="1"  authorities="ROLE_USER" />
-                <user name="JPAEZC"  password="1"  authorities="ROLE_USER" />
-                <user name="LVERAP"  password="1"  authorities="ROLE_USER" />
-                <user name="admin" password="admin123" authorities="ROLE_ADMIN" />
-                <user name="LRICARDOR"   password="admin123" authorities="ROLE_USER" />
-            </user-service>
-        </authentication-provider>
-    </authentication-manager>      
+    <sec:authentication-manager >
+        <sec:authentication-provider>
+            <sec:user-service>
+                <sec:user name="user1"  password="abc123"  authorities="ROLE_USER" />
+                <sec:user name="SSAAVEDRAV"  password="1"  authorities="ROLE_USER" />
+                <sec:user name="JPAEZC"  password="1"  authorities="ROLE_USER" />
+                <sec:user name="LVERAP"  password="1"  authorities="ROLE_USER" />
+                <sec:user name="admin" password="admin123" authorities="ROLE_ADMIN" />
+                <sec:user name="LRICARDOR"   password="admin123" authorities="ROLE_USER" />
+            </sec:user-service>
+        </sec:authentication-provider>
+    </sec:authentication-manager>      
      
-</beans:beans>
+</beans>
