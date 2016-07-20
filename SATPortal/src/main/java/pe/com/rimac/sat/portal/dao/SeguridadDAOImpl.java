@@ -84,11 +84,13 @@ public class SeguridadDAOImpl implements SeguridadDAO{
 				}else{
 					resultado = null;
 					logger.info(traza + "No existe el usuario");
+					throw new DBException("El usuario " + idUsuario + " no existe en la Base de Datos");
 				}
 																
 			}else{		
 				resultado = null;
-				logger.info(traza + "No se pudo obtener informacion de la base de datos");				
+				logger.info(traza + "No se pudo obtener información de la base de datos");	
+				throw new DBException("No se pudo obtener información de la base de datos");
 			}
 			
 		}catch(Exception e){

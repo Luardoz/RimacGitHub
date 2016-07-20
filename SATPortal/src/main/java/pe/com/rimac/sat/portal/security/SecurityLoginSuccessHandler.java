@@ -6,8 +6,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.DefaultRedirectStrategy;
+import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -20,11 +24,15 @@ import pe.com.rimac.sat.portal.util.Properties;
 @Component
 public class SecurityLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
 
+	private static final Logger logger = LoggerFactory.getLogger(SecurityLoginSuccessHandler.class);
+	
 	@Autowired
 	private SeguridadService seguridadService;
 	
 	@Autowired
 	private Properties properties;
+	
+	 private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 	
 	public SecurityLoginSuccessHandler() {
 		super();
@@ -32,19 +40,18 @@ public class SecurityLoginSuccessHandler extends SimpleUrlAuthenticationSuccessH
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication auth) throws IOException, ServletException {
-		if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
-					
-			try{
-				UsuarioRimac usuario = seguridadService.getUsuario("", HomeController.getPrincipal(), "");
-				request.getSession().setMaxInactiveInterval(60000);
-				request.getSession().setAttribute("user", usuario.getIdUsuario());
-				response.setHeader("StatusLogin", "0");
-				response.setHeader("session", usuario.getIdUsuario());
-			}catch(DBException e){
-				
-			}
-		} else {
-			super.onAuthenticationSuccess(request, response, auth);
+		String traza = "[onAuthenticationSuccess]";		
+		String url = "";
+		logger.info(traza + "Iniciando el metodo onAuthenticationSuccess");
+		try{
+			UsuarioRimac usuario = seguridadService.getUsuario(traza, HomeController.getPrincipal(), "");
+			request.getSession().setMaxInactiveInterval(properties.cAPPLICATION_SESSION_TIME);
+			request.getSession().setAttribute("user", usuario);				
+			url = "/autentificacion/decisor";
+		}catch(DBException e){
+			logger.error("[onAuthenticationSuccess]DBException:", e);
+			url = "/login/userNotExist";
 		}
+		redirectStrategy.sendRedirect(request, response, url);
 	}
 }

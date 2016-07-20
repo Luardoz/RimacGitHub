@@ -66,7 +66,19 @@ public class Properties {
 	
 	/*
 	 * PROPIEDADES SPRING SECURITY
-	 */
+	 */		
+	@Value("${security.bad.credentials}")
+	public String cSECURITY_BAD_CREDENTIALS;
+	@Value("${security.credentials.expired}")
+	public String cSECURITY_CREDENTIALS_EXPIRED;
+	@Value("${security.account.locked}")
+	public String cSECURITY_ACCOUNT_LOCKED;
+	@Value("${security.account.disabled}")
+	public String cSECURITY_ACCOUNT_DISABLED;
+	@Value("${security.after.user.no.exist}")
+	public String cSECURITY_USER_NOT_EXIST;
+	@Value("${application.session.max.time}")
+	public int cAPPLICATION_SESSION_TIME;
 	@Value("${application.role.user}")
 	public String cAPPLICATION_ROLE_USER;
 	@Value("${application.role.admin}")

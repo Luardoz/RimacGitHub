@@ -3,17 +3,15 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 
 <div id="datos-cliente" class="header-section2">	
-<!-- j_spring_security_logout -->
-	<form method="post" id="logoutForm" name="formlogout" action="<c:url value="/logout" />" >
+	<form method="post" id="logoutForm" name="formlogout" action="<c:url value="/j_spring_security_logout" />" >
 		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 		<div id="header-section2">
 			<i class="m-icn-locked"></i>			
 			<span id="avatar">
 				<span id="nameTitularHeader"><strong>
-				<%-- <sec:authorize access="isAuthenticated()">
+				<sec:authorize access="isAuthenticated()">
 						<%=request.getUserPrincipal().getName()%>
-				</sec:authorize> --%>
-				<c:out value="${sessionScope.user.idUsuario}" />
+				</sec:authorize>				
 				</strong></span>							
 			</span>			
 			<input id="logout" 		name="logout" 		type="button" 	value="" style="border:none;float: right;" onclick="javascript:formSubmit();"/>			

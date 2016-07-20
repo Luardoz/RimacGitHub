@@ -12,8 +12,7 @@
 <body style="width: 100%;background:#f1f4f5;">
 
 	<%-- <c:url var="loginUrl" value="/login" /> --%>
-	<%-- <c:url var="loginUrl" value="/j_spring_security_check" /> --%>
-	<c:url var="loginUrl" value="/autentificacion/decisor" />           
+	<c:url var="loginUrl" value="/j_spring_security_check" />
 	<form method="post" 
 			id="formlogin" 
 			name="formlogin" 
@@ -108,6 +107,32 @@
 									</div>			   								   	
 							   	</div>
 						   	 </c:if>
+						   	 <c:if test="${mensaje != null}">
+								<div id="mensajes-login" style="">
+									<div class="col-md-12">
+								   		<div class="alert alert-danger" style="margin: 5px; padding: 5px;">
+								   			<button aria-hidden="true" 
+								   					data-dismiss="alert" 
+								   					class="close"
+								   					type="button">×</button>
+								   			<span id="msj-result-login"><c:out value="${mensaje}" /></span>								   										   		
+										</div>
+									</div>			   								   	
+							   	</div>
+						   	 </c:if>
+						   	 <c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION}">						
+						      <div id="mensajes-login" style="">
+									<div class="col-md-12">
+								   		<div class="alert alert-danger" style="margin: 5px; padding: 5px;">
+								   			<button aria-hidden="true" 
+								   					data-dismiss="alert" 
+								   					class="close"
+								   					type="button">×</button>
+								   			<span id="msj-result-login">No se pudo ingresar al Sistema. Reason: <c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}" /></span>								   										   		
+										</div>
+									</div>			   								   	
+							   	</div>
+						    </c:if>
 						   	<input type="hidden" name="${_csrf.parameterName}"   value="${_csrf.token}" />
 							<div style="margin: 15px 0 15px 0;">
 								<input class="btn btn-primary" type="submit" value="Ingresar">

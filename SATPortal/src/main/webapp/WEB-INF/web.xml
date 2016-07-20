@@ -4,7 +4,7 @@
     <param-name>contextConfigLocation</param-name>
     <param-value>
 		/WEB-INF/applicationContext-servlet.xml
-		<!-- /WEB-INF/spring/spring-security.xml -->
+		/WEB-INF/spring/spring-security.xml
 		</param-value>
   </context-param>
   <listener>
@@ -34,7 +34,7 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
   
- 	<!-- <filter>
+   <filter>
     	<filter-name>springSecurityFilterChain</filter-name>
     	<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
   	</filter>
@@ -44,7 +44,7 @@
   	</filter-mapping>
   	<listener>
     	<listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
-  	</listener> -->
+  	</listener>
   
   <welcome-file-list>
     <welcome-file>/login</welcome-file>

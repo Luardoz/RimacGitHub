@@ -3,20 +3,21 @@ package pe.com.rimac.sat.portal.controller;
 import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import pe.com.rimac.sat.portal.bean.UsuarioRimac;
 import pe.com.rimac.sat.portal.exception.DBException;
@@ -24,7 +25,7 @@ import pe.com.rimac.sat.portal.service.SeguridadService;
 import pe.com.rimac.sat.portal.util.Properties;
 
 /**
- * Handles requests for the application home page.
+ * Maneja las peticiones para la vista pública de la aplicación.
  */
 @Controller
 public class HomeController {
@@ -51,59 +52,30 @@ public class HomeController {
 	/**
 	 * @return devuelve pagina de acuerdo al rol
 	 */
-//	@RequestMapping(value = "/autentificacion/decisor", method = RequestMethod.GET)
-//	public String decisor(HttpServletRequest request, ModelMap model) throws DBException{
-//	
-//		String page = "";
-//		String traza = "[decisor]";
-//		logger.info(traza + "Identificando rol");		
-//		Collection<? extends GrantedAuthority> authorities= loggedUserAuthorities();		
-//		 if (authorities.contains(new SimpleGrantedAuthority(properties.cAPPLICATION_ROLE_ADMIN))) {
-//			 logger.info(traza + "Acceso administrador");			 
-//			 page = "redirect:../admin";
-//		 }else if (authorities.contains(new SimpleGrantedAuthority(properties.cAPPLICATION_ROLE_USER))) {
-//			 logger.info(traza + "Acceso usuario");
-//			 logger.info(traza + "Buscando los datos del usuario en la BD");
+	@RequestMapping(value = "/autentificacion/decisor", method = RequestMethod.GET)
+	public String decisor(HttpServletRequest request, ModelMap model) throws DBException{
+	
+		String page = "";
+		String traza = "[decisor]";
+		logger.info(traza + "Identificando rol");		
+		Collection<? extends GrantedAuthority> authorities= loggedUserAuthorities();		
+		 if (authorities.contains(new SimpleGrantedAuthority(properties.cAPPLICATION_ROLE_ADMIN))) {
+			 logger.info(traza + "Acceso administrador");			 
+			 page = "redirect:../admin";
+		 }else if (authorities.contains(new SimpleGrantedAuthority(properties.cAPPLICATION_ROLE_USER))) {
+			 logger.info(traza + "Acceso usuario");
+			 logger.info(traza + "Buscando los datos del usuario en la BD");
+
+//			 UsuarioRimac usuario = (UsuarioRimac) request.getSession().getAttribute("user");   
 //			 UsuarioRimac usuario = seguridadService.getUsuario(traza, getPrincipal(), "");
-//			 
 //			if(usuario != null){
 //				HttpSession session = request.getSession();
 //				session.setAttribute("user", usuario);
-//				page = "redirect:../user";
+				page = "redirect:../user";
 //			}else{
 //				page = "redirect:/login?error=No existe el usuario. Por favor ingrese las credenciales correctamente";				
 //			}			 		    
-//		 }
-//		
-//		return page;
-//	}
-	
-	@RequestMapping(value = "/autentificacion/decisor", method = RequestMethod.POST)	
-	public String decisor(@RequestParam("user") String user, @RequestParam("password") String password
-			, HttpServletRequest request, HttpServletResponse response){
-		
-		String page = "";
-		String traza = "[decisor]";
-		UsuarioRimac usuario;
-//		ObjectMapper mapper = new ObjectMapper();
-		logger.info(traza + "Consultando credenciales de usuario");			
-		response.setCharacterEncoding("UTF-8");
-		try{
-//			logger.info(traza + "JSON: " + object);
-//			usuario = mapper.readValue(object, UsuarioRimac.class);
-			usuario = seguridadService.getUsuario(traza, user, password);
-			
-			if(usuario != null){
-				HttpSession session = request.getSession();
-				session.setAttribute("user", usuario);
-				page = "redirect:../user";
-			}else{
-				page = "redirect:/login?error=No existe el usuario. Por favor ingrese las credenciales correctamente";				
-			}
-		}catch(DBException e){
-			logger.error(traza + "Ocurrió un error en la BD");
-			page = "redirect:/login?error=Error accediendo a la BD. Intentelo mas tarde";			
-		}
+		 }
 		
 		return page;
 	}
@@ -117,26 +89,28 @@ public class HomeController {
 		}
     	logger.info("[loginPage]Devolviendo Login para " + ipAddress + " en: " + userAgent);    	
         return "public/login";
-    }
-    
-//    @RequestMapping(value="/logout", method = RequestMethod.GET)
-//    public String logoutPage (HttpServletRequest request, HttpServletResponse response) {
-//    	logger.info("Saliendo de la aplicación");
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        if (auth != null){    
-//            new SecurityContextLogoutHandler().logout(request, response, auth);
-//        }
-//        return "redirect:/login?logout";
-//    }
-    
-    @RequestMapping(value="/logout", method = RequestMethod.POST)
-    public String logoutPage (HttpServletRequest request, HttpServletResponse response) {
-    	logger.info("Saliendo de la aplicación");
-    	logger.info("Invalidando la sesion");
-        request.getSession().invalidate();
-        return "redirect:/login?logout";
-    }
+    }    
  
+    @RequestMapping(value = "/login/{error}", method = RequestMethod.GET)    
+    public final String displayLoginform(Model model,  @PathVariable final String error) {
+    	
+    	String mensaje = "";
+    	
+    	if(properties.cSECURITY_ACCOUNT_DISABLED.equals(error))
+    		mensaje = "El usuario está deshabilitado";
+    	else if(properties.cSECURITY_ACCOUNT_LOCKED.equals(error))
+    		mensaje = "El usuario está bloqueado";
+    	else if(properties.cSECURITY_BAD_CREDENTIALS.equals(error))
+    		mensaje = "Usuario y/o contraseña son incorrectos";
+    	else if(properties.cSECURITY_CREDENTIALS_EXPIRED.equals(error))
+    		mensaje = "Las credenciales han expirado";
+    	else if(properties.cSECURITY_USER_NOT_EXIST.equals(error))
+    		mensaje = "El usuario no existe en la Base de Datos";
+    	
+        model.addAttribute("mensaje", mensaje);
+    	return "public/login";
+    }
+    
     @RequestMapping(value = "/Access_Denied", method = RequestMethod.GET)
     public String accessDeniedPage(ModelMap model) {
     	logger.info("Acceso denegado");

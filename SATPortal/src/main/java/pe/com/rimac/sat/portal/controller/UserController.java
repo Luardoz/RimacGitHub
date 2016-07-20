@@ -198,16 +198,4 @@ public class UserController {
     		logger.error(traza + "Ocurrió un error en Base de Datos");
     	}               
     }
-    
-//    private String getPrincipal(){
-//        String userName = null;
-//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-// 
-//        if (principal instanceof UserDetails) {
-//            userName = ((UserDetails)principal).getUsername();
-//        } else {
-//            userName = principal.toString();
-//        }
-//        return userName;
-//    }
 }
