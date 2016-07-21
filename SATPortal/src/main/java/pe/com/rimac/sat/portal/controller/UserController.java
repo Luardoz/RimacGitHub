@@ -56,7 +56,8 @@ public class UserController {
     	UsuarioRimac user = (UsuarioRimac) session.getAttribute("user");    	
     	logger.info("[userPage]Devolviendo vista usuario. Usuario: " + user.getIdUsuario());       
     	model.addAttribute("user", user.getIdUsuario());
-    	model.addAttribute("nombre", user.getNomTer());
+    	model.addAttribute("nomTer", user.getNomTer());
+    	model.addAttribute("apePatter", user.getApePatter());
         return "user/inicio";
     }
     

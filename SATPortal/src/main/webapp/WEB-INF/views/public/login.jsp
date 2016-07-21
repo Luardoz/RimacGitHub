@@ -11,8 +11,8 @@
     </head>
 <body style="width: 100%;background:#f1f4f5;">
 
-	<%-- <c:url var="loginUrl" value="/login" /> --%>
-	<c:url var="loginUrl" value="/j_spring_security_check" />
+	<c:url var="loginUrl" value="/login" />
+	<%-- <c:url var="loginUrl" value="/j_spring_security_check" /> --%>
 	<form method="post" 
 			id="formlogin" 
 			name="formlogin" 
@@ -133,6 +133,19 @@
 									</div>			   								   	
 							   	</div>
 						    </c:if>
+						    <c:if test="${param.expired != null}">
+								<div id="mensajes-login" style="">
+									<div class="col-md-12">
+								   		<div class="alert alert-danger" style="margin: 5px; padding: 5px;">
+								   			<button aria-hidden="true" 
+								   					data-dismiss="alert" 
+								   					class="close"
+								   					type="button">×</button>
+								   			<span id="msj-result-login">Tu sesión ha expirado. Por favor vuelve a ingresar</span>								   										   		
+										</div>
+									</div>			   								   	
+							   	</div>
+						   	 </c:if>
 						   	<input type="hidden" name="${_csrf.parameterName}"   value="${_csrf.token}" />
 							<div style="margin: 15px 0 15px 0;">
 								<input class="btn btn-primary" type="submit" value="Ingresar">
@@ -247,7 +260,7 @@
 			<div class="modal-cargando">
 				<div class="modal-content">	
 					<div class="gif_animation">					
-						<img src="<%=request.getContextPath()%>/img/rimac/loading.gif">
+						<img src="${pageContext.servletContext.contextPath}/img/rimac/loading.gif">
 					</div>
 				</div>
 			</div>		  	

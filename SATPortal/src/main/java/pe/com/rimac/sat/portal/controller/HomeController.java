@@ -3,7 +3,6 @@ package pe.com.rimac.sat.portal.controller;
 import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import pe.com.rimac.sat.portal.bean.UsuarioRimac;
 import pe.com.rimac.sat.portal.exception.DBException;
-import pe.com.rimac.sat.portal.service.SeguridadService;
 import pe.com.rimac.sat.portal.util.Properties;
 
 /**
@@ -31,10 +28,6 @@ import pe.com.rimac.sat.portal.util.Properties;
 public class HomeController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
-	
-	@Autowired
-	private SeguridadService seguridadService;
-	
 	@Autowired
 	private Properties properties;
 	

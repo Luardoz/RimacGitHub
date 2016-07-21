@@ -93,7 +93,9 @@
 </div>
 
 <div id="sin-reclamos" style="display:none;">
-	<h3>Hola <span class="js-breadcump-nombreTitular"><c:out value="${sessionScope.user.nomTer} ${sessionScope.user.apePatter}" /></span>,</h3>
+	<h3>Hola <span class="js-breadcump-nombreTitular">
+	<%-- <c:out value="${sessionScope.user.nomTer} ${sessionScope.user.apePatter}" /> --%>
+	</span>,</h3>
 	<p class="page-info-wc">
     A la fecha no tenemos ningún reclamo asociado a tu nombre.
 
@@ -112,7 +114,9 @@
 		});
 		
 		var user = $("#nameTitularHeader").text();
-		/* $(".js-breadcump-nombreTitular").html(user); */
+		var nomTer = $("#nomTer").val();
+		var apePatter = $("#apePatter").val();
+		$(".js-breadcump-nombreTitular").html(nomTer + ' ' + apePatter);
 
 		$("#registro-reclamo-container").hide();
 		$("#tareas-reclamo-container").hide();

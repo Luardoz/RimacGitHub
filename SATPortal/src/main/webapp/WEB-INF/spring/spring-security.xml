@@ -16,36 +16,36 @@
 		</property>
 	</bean>  
       
-    <sec:http auto-config="true" use-expressions="true">
+    <sec:http auto-config="false" use-expressions="true">
+    	<sec:intercept-url pattern="/login" access="isAnonymous()" />
     	<sec:intercept-url pattern="/autentificacion/decisor" access="isAuthenticated()" />
         <sec:intercept-url pattern="/" access="permitAll" />        
-        <sec:intercept-url pattern="/j_spring_security_check" access="isAnonymous()" />
+        <sec:intercept-url pattern="/j_spring_security_logout" access="permitAll" />                     
         <sec:intercept-url pattern="/admin" access="hasRole('ADMIN')" />
-        <sec:intercept-url pattern="/user" access="hasAnyRole('ADMIN','USER')" />                   
-        <!-- <sec:intercept-url pattern="/js/rimac/user/*" access="hasAnyRole('ADMIN','USER')" />      -->   
+        <sec:intercept-url pattern="/user" access="hasAnyRole('ADMIN','USER')" />                             
         <sec:intercept-url pattern="/serviceUser/*" access="hasAnyRole('ADMIN','USER')" />               
-        <sec:form-login  login-page="/login" username-parameter="user" password-parameter="password"    
-        	login-processing-url="/j_spring_security_check"    	
+      	
+      	<sec:session-management 	  
+      		invalid-session-url="/login"    		
+			session-fixation-protection="none">			
+            <sec:concurrency-control 
+            	max-sessions="1"             	
+            	error-if-maximum-exceeded="true"
+            	/>
+        </sec:session-management>
+      	<sec:form-login  login-page="/login" username-parameter="user" password-parameter="password"            	
         	authentication-failure-url="/login?denied"
         	default-target-url="/autentificacion/decisor"
         	authentication-failure-handler-ref="authenticationFailureHandler" 
-        	authentication-success-handler-ref="securityLoginSuccessHandler"
-        />
-        <!-- login-processing-url="/j_spring_security_check" -->         
+        	authentication-success-handler-ref="securityLoginSuccessHandler"/> 
+        <!-- login-processing-url="/j_spring_security_check"           	
+        	expired-url="/login?expired"        	
+        	session-authentication-error-url="/login/accountLocked"		-->         
         <sec:logout invalidate-session="true"
         	logout-success-url="/login?status=logout" 
+        	logout-url="/j_spring_security_logout"
         	delete-cookies="JSESSIONID" 
-        	logout-url="/j_spring_security_logout" />	
-      
-		<sec:session-management 
-			invalid-session-url="/login"
-			session-fixation-protection="none"
-			session-authentication-error-url="/login?errorsession">
-            <sec:concurrency-control 
-            	max-sessions="1" 
-            	error-if-maximum-exceeded="true"
-            	expired-url="/login?expired" />
-        </sec:session-management>  		
+        	 />	      		 	
         
         <sec:csrf />
 		<sec:headers>

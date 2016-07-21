@@ -48,6 +48,9 @@
 
 		</div>
 		
+		<div id="content-dialog-session">
+		</div>
+		
 		<div id="divLayer" class="divFlotante" style="display:none" >
               <div id="loading-misseguros"></div>
         </div>

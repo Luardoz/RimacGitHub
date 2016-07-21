@@ -49,7 +49,7 @@ public class SecurityLoginSuccessHandler extends SimpleUrlAuthenticationSuccessH
 			request.getSession().setAttribute("user", usuario);				
 			url = "/autentificacion/decisor";
 		}catch(DBException e){
-			logger.error("[onAuthenticationSuccess]DBException:", e);
+			logger.error("[onAuthenticationSuccess]DBException:" + e.getMsjError());
 			url = "/login/userNotExist";
 		}
 		redirectStrategy.sendRedirect(request, response, url);

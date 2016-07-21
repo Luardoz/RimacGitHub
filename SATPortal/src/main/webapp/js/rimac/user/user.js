@@ -1,3 +1,55 @@
+function formSubmit() {
+			/* document.getElementById("logoutForm").submit(); */
+			var url = $("#logoutForm").attr('action');
+			var data = $("#logoutForm").serializeArray();			
+			$.ajax({
+				url : url,
+				data : data,
+				type : "POST",
+				async : false,
+				success : function(response, status, xhr) {
+					console.log('success');
+					window.location.reload();
+				},
+				error : function(XMLHttpRequest, textStatus, errorThrown) {
+					var jsonError = JSON.stringify(XMLHttpRequest);
+					console.log('error');
+					console.log(XMLHttpRequest);
+					window.location.href = "login";
+				}
+			});
+}
+
+function validarFinSesion(xhr) {
+	if (xhr.responseText.indexOf('html') !== -1) {
+		
+		$("#content-dialog-session").html('<div id="dialog-confirm-end-session" title="Sesión finalizada">' +
+				  '<p><span class=".modal.in .modal-dialog" style="float:left; margin:12px 12px 20px 0;"></span>Su sesión ha finalizado. Por favor ingrese nuevamente</p>'+
+				  '</div>');
+
+		$( "#dialog-confirm-end-session" ).dialog({
+			closeOnEscape: false,	
+		    open: function(event, ui) {
+		        $(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
+		    },
+			resizable: false,
+			closeText: "",
+			height: "auto",
+			width: 400,
+			modal: true,			
+			buttons: {
+				"Ok": function() {
+					$( this ).dialog( "close" );
+					location.reload();
+				}
+			}
+		});
+		
+		return true;
+	}else
+		return false;
+};
+
 /*
  * Beans lado cliente
  */
@@ -106,45 +158,68 @@ function registrarReclamo(){
 		url : "serviceUser/reclamos-registrar/nuevo",
 		processData : false,
 		contentType : false,
-		async: true,
+		async: false,
 		data : formData,
 		cache : false,
 		success : function(response, status, xhr) {
-			var clase = "";
-			if(response.codResp == '0')
-				clase = 'alert-success';
-			else
-				clase = 'alert-danger';
-			$("#container-mensaje").html('');
-			$("#container-mensaje").append('<div class="alert '+clase+'" style="margin: 5px; padding: 5px;">' +
-					'<button aria-hidden="true"' +
-							'data-dismiss="alert"' + 
-							'class="close"' +
-							'type="button">×</button>' +
-							 '<span id="msj-result-reg-reclamo"></span>' +
-				'</div>');
-			$("#msj-result-reg-reclamo").html(response.msjResp);			
-			$("#mensajes-registrar").show();
-			
-			//Reseteando el formulario
-			$('#form-reclamos-registrar')[0].reset();			
-			var formulario = $('#form-reclamos-registrar').validate();			
-			formulario.resetForm();
-			
 			closeModalCargando();
+			if(!validarFinSesion(xhr)){
+				var clase = "";
+				if(response.codResp == '0')
+					clase = 'alert-success';
+				else
+					clase = 'alert-danger';
+				$("#container-mensaje").html('');
+				$("#container-mensaje").append('<div class="alert '+clase+'" style="margin: 5px; padding: 5px;">' +
+						'<button aria-hidden="true"' +
+								'data-dismiss="alert"' + 
+								'class="close"' +
+								'type="button">×</button>' +
+								 '<span id="msj-result-reg-reclamo"></span>' +
+					'</div>');
+				$("#msj-result-reg-reclamo").html(response.msjResp);			
+				$("#mensajes-registrar").show();
+				
+				//Reseteando el formulario
+				$('#form-reclamos-registrar')[0].reset();			
+				var formulario = $('#form-reclamos-registrar').validate();			
+				formulario.resetForm();							
+			}
 		},
 		error : function(a, b, c) {
-			$("#container-mensaje").html('');
-			$("#container-mensaje").append('<div class="alert alert-danger" style="margin: 5px; padding: 5px;">' +
-							'<button aria-hidden="true"' +
-									'data-dismiss="alert"' + 
-									'class="close"' +
-									'type="button">×</button>' +
-									 '<span id="msj-result-reg-reclamo"></span>' +
-						'</div>');
-			$("#msj-result-reg-reclamo").html("Hubo un error registrando el reclamo");			
-			$("#mensajes-registrar").show();
 			closeModalCargando();
+			var jsonError = JSON.stringify(a);
+			if(jsonError.search("Invalid CSRF Token")> 0){
+				$("#content-dialog-session").html('<div id="dialog-confirm-end-session" title="Sesión finalizada">' +
+						  '<p><span class=".modal.in .modal-dialog" style="float:left; margin:12px 12px 20px 0;"></span>Su sesión ha finalizado. Por favor ingrese nuevamente</p>'+
+						  '</div>');
+
+				$( "#dialog-confirm-end-session" ).dialog({
+					resizable: false,
+					closeText: "",
+					height: "auto",
+					width: 400,
+					modal: true,
+					buttons: {
+						"Ok": function() {
+							$( this ).dialog( "close" );
+							location.reload();
+						}
+					}
+				});
+			}else{
+				var mensaje = 'Hubo un error registrando el reclamo';
+				$("#container-mensaje").html('');
+				$("#container-mensaje").append('<div class="alert alert-danger" style="margin: 5px; padding: 5px;">' +
+								'<button aria-hidden="true"' +
+										'data-dismiss="alert"' + 
+										'class="close"' +
+										'type="button">×</button>' +
+										 '<span id="msj-result-reg-reclamo"></span>' +
+							'</div>');
+				$("#msj-result-reg-reclamo").html("Hubo un error registrando el reclamo");			
+				$("#mensajes-registrar").show();			
+			}
 		}
 	});
 }
@@ -171,17 +246,18 @@ function traerJsonCompletoMisReclamos(){
 //			xhr.setRequestHeader('estado', estado);
 //			xhr.setRequestHeader('ticket', ticket);			
 //		},
-		success 	: function(data) {
+		success 	: function(data, status, xhr) {
+					closeModalCargando();
+					if(!validarFinSesion(xhr)){
 //					if (data != 'undefined' && data.length > 0){							
 //						tablashtml(data, nametable);
-//						closeModalCargando();
 //					}else{
-//						closeModalCargando();
 //						$("#mis-reclamos").hide();
 //						$("#sin-reclamos").show();
 //					};
-					tablashtml(data, nametable);
-					closeModalCargando();
+						tablashtml(data, nametable);
+						
+					}
 		},
 		error : function(xhr, ajaxOptions, thrownError) {
 			closeModalCargando();
@@ -287,23 +363,23 @@ function buscarTareas(idewf,desctipoinci){
 		beforeSend : function(xhr) {
 			xhr.setRequestHeader('idewf', idewf);					
 		},
-		success 	: function(data) {
-					if (data != 'undefined'){							
-						procesarTablaTareas(data);
-						closeModalCargando();
-					}else{
-						closeModalCargando();
-						loadModalMensaje('Informacion','<center>No se encontraron tareas para el Ticket.</center>','');
-					};
+		success 	: function(data, status, xhr) {
+					closeModalCargando();
+					if(!validarFinSesion(xhr)){					
+						if (data != 'undefined'){							
+							procesarTablaTareas(data);						
+							$("#tituloTareas").html('Listado de Tareas - Ticket ' + idewf +' ('+ desctipoinci + ')')	
+							$("#content-mis-tareas").modal();
+						}else{						
+							loadModalMensaje('Informacion','<center>No se encontraron tareas para el Ticket.</center>','');
+						};
+					}
 		},
 		error : function(xhr, ajaxOptions, thrownError) {
 			closeModalCargando();
 			loadModalMensaje('Informacion','<center>No se encontraron tareas para el Ticket.</center>','');
 		}
-	});
-
-	$("#tituloTareas").html('Listado de Tareas - Ticket ' + idewf +' ('+ desctipoinci + ')')	
-	$("#content-mis-tareas").modal();				
+	});				
 }	
 
 function procesarTablaTareas(jsonTareas){

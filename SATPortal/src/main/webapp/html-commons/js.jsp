@@ -93,3 +93,4 @@
 <!-- JS especificos SAT Portal -->
 <script src="<%=request.getContextPath()%>/js/rimac/user/user.js"></script>
 <script src="<%=request.getContextPath()%>/js/rimac/main.js"></script>
+<%-- <script src="<%=request.getContextPath()%>/js/rimac/public/acceso.js"></script> --%>
