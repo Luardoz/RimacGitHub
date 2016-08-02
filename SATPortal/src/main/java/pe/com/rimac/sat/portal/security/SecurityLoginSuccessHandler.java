@@ -27,12 +27,10 @@ public class SecurityLoginSuccessHandler extends SimpleUrlAuthenticationSuccessH
 	private static final Logger logger = LoggerFactory.getLogger(SecurityLoginSuccessHandler.class);
 	
 	@Autowired
-	private SeguridadService seguridadService;
-	
+	private SeguridadService seguridadService;	
 	@Autowired
-	private Properties properties;
-	
-	 private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+	private Properties properties;	
+	private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 	
 	public SecurityLoginSuccessHandler() {
 		super();

@@ -120,7 +120,7 @@
 									</div>			   								   	
 							   	</div>
 						   	 </c:if>
-						   	 <c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION}">						
+						   	<%--  <c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION}">						
 						      <div id="mensajes-login" style="">
 									<div class="col-md-12">
 								   		<div class="alert alert-danger" style="margin: 5px; padding: 5px;">
@@ -132,7 +132,7 @@
 										</div>
 									</div>			   								   	
 							   	</div>
-						    </c:if>
+						    </c:if> --%>
 						    <c:if test="${param.expired != null}">
 								<div id="mensajes-login" style="">
 									<div class="col-md-12">

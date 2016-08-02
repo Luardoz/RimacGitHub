@@ -34,7 +34,6 @@ public class TestLDAP {
 	    };
 	
 	public static void main(String[] args) {
-
 		
 		try {
 			Hashtable env = new Hashtable();			

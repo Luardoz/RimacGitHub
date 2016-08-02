@@ -4,7 +4,7 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
     http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
       
-    <bean id="authenticationFailureHandler"
+    <bean id="securityLoginFailureHandler"
 		class="org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler">
 		<property name="exceptionMappings">
 			<props>
@@ -36,7 +36,7 @@
       	<sec:form-login  login-page="/login" username-parameter="user" password-parameter="password"            	
         	authentication-failure-url="/login?denied"
         	default-target-url="/autentificacion/decisor"
-        	authentication-failure-handler-ref="authenticationFailureHandler" 
+        	authentication-failure-handler-ref="securityLoginFailureHandler" 
         	authentication-success-handler-ref="securityLoginSuccessHandler"/> 
         <!-- login-processing-url="/j_spring_security_check"           	
         	expired-url="/login?expired"        	
