@@ -10,8 +10,7 @@
 		</layout>
 	</appender>
 	<appender name="file" class="org.apache.log4j.DailyRollingFileAppender">
-       <param name="File" value="/was/logs01/logsSAS/satportal/satportal.log" />
-       <!-- <param name="File" value="D:/log/satportal/satportal.log" /> -->
+       <param name="File" value="/was/logs01/logsSAS/satportal/satportal.log" />       
        <param name="DatePattern" value="'.'yyyy-MM-dd" />
        <layout class="org.apache.log4j.PatternLayout">
           <param name="ConversionPattern" value="[%5p] [%d{dd-MM-yyyy HH:mm:ss.SSS}] (%c{1}.java:%L) - %m%n"/>
@@ -43,7 +42,7 @@
 	<!-- Root Logger -->
 	<root>
 		<priority value="warn" />
-		<!-- <appender-ref ref="console" /> -->
+		<appender-ref ref="console" />
 		<appender-ref ref="file" />
 	</root>
 	
