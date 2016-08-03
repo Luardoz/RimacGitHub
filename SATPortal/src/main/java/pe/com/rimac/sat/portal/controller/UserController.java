@@ -55,8 +55,9 @@ public class UserController {
     public String userPage(ModelMap model, HttpSession session) {
     	UsuarioRimac user = (UsuarioRimac) session.getAttribute("user");    	
     	logger.info("[userPage]Devolviendo vista usuario. Usuario: " + user.getIdUsuario());       
-    	model.addAttribute("user", user.getIdUsuario());
-    	model.addAttribute("nombre", user.getNomTer());
+    	model.addAttribute("idusuario", user.getIdUsuario());
+    	model.addAttribute("nomter", user.getNomTer());
+    	model.addAttribute("apepatter", user.getApePatter());
         return "user/inicio";
     }
     

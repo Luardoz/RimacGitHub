@@ -9,7 +9,7 @@
 			<i class="m-icn-locked"></i>			
 			<span id="avatar">
 				<span id="nameTitularHeader"><strong>
-				<c:out value="${sessionScope.user.idUsuario}" />
+				<c:out value="${idusuario}" />
 				</strong></span>							
 			</span>			
 			<input id="logout" 		name="logout" 		type="button" 	value="" style="border:none;float: right;" onclick="javascript:formSubmit();"/>			
@@ -28,6 +28,9 @@
 			<span id="nombre-cliente"></span>
 		</div>
 
+		<input type="hidden" 	id="idusuario" 			name="idusuario"			value="${idusuario}"/>
+		<input type="hidden" 	id="nomter" 			name="nomter"				value="${nomter}"/>
+		<input type="hidden" 	id="apepatter" 			name="apepatter"			value="${apepatter}"/>
 		<input type="hidden" 	id="idptiptercero" 		name="idptiptercero"		value=""/>
 		<input type="hidden" 	id="validacionlogin" 	name="validacionlogin"		value=""/>
 		<input type="hidden" 	id="idetercero" 		name="idetercero"			value=""/>
