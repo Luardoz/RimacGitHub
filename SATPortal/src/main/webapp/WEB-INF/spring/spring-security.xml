@@ -4,10 +4,11 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
     http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
       
-    <bean id="securityLoginFailureHandler"
+    <bean id="securityLoginFailureHandlersss"
 		class="org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler">
 		<property name="exceptionMappings">
 			<props>
+				<prop key="org.springframework.security.core.userdetails.UsernameNotFoundException">/login/userNotExist</prop>
 				<prop key="org.springframework.security.authentication.BadCredentialsException">/login/badCredentials</prop>
 				<prop key="org.springframework.security.authentication.CredentialsExpiredException">/login/credentialsExpired</prop>
 				<prop key="org.springframework.security.authentication.LockedException">/login/accountLocked</prop>
@@ -21,17 +22,17 @@
     	<sec:intercept-url pattern="/autentificacion/decisor" access="isAuthenticated()" />
         <sec:intercept-url pattern="/" access="permitAll" />        
         <sec:intercept-url pattern="/j_spring_security_logout" access="permitAll" />                     
-        <sec:intercept-url pattern="/admin" access="hasRole('ADMIN')" />
-        <sec:intercept-url pattern="/user" access="hasAnyRole('ADMIN','USER')" />                             
-        <sec:intercept-url pattern="/serviceUser/*" access="hasAnyRole('ADMIN','USER')" />               
+        <sec:intercept-url pattern="/admin" access="hasRole('ROLE_ADMIN')" />
+        <sec:intercept-url pattern="/user" access="hasAnyRole('ROLE_ADMIN','ROLE_USER')" />                             
+        <sec:intercept-url pattern="/serviceUser/*" access="hasAnyRole('ROLE_ADMIN','ROLE_USER')" />               
       	
       	<sec:session-management 	  
       		invalid-session-url="/login"    		
 			session-fixation-protection="none">			
-            <sec:concurrency-control 
+           <!--  <sec:concurrency-control 
             	max-sessions="1"             	
             	error-if-maximum-exceeded="true"
-            	/>
+            	/> -->
         </sec:session-management>
       	<sec:form-login  login-page="/login" username-parameter="user" password-parameter="password"            	
         	authentication-failure-url="/login?denied"
@@ -54,17 +55,26 @@
 		</sec:headers>		
     </sec:http>
     
-    <sec:authentication-manager >
-        <sec:authentication-provider>
-            <sec:user-service>
-                <sec:user name="user1"  password="abc123"  authorities="ROLE_USER" />
-                <sec:user name="SSAAVEDRAV"  password="1"  authorities="ROLE_USER" />
-                <sec:user name="JPAEZC"  password="1"  authorities="ROLE_USER" />
-                <sec:user name="LVERAP"  password="1"  authorities="ROLE_USER" />
-                <sec:user name="admin" password="admin123" authorities="ROLE_ADMIN" />
-                <sec:user name="LRICARDOR"   password="admin123" authorities="ROLE_USER" />
-            </sec:user-service>
-        </sec:authentication-provider>
-    </sec:authentication-manager>      
+    <sec:authentication-manager alias="authenticationManager">
+        <sec:authentication-provider ref="authenticationProviderR" />
+    </sec:authentication-manager>       
+     
+    <!-- Decisor de roles, necesario para tener nombres de roles personalizados -->
+    <bean id="decisorDeRoles" class="org.springframework.security.access.vote.RoleVoter">
+        <property name="rolePrefix" value="ROLE_" />
+    </bean>
+ 
+    <!-- Decisor de autenticación. -->
+    <bean id="decisorDeAutenticacion" class="org.springframework.security.access.vote.AuthenticatedVoter" /> 
+     
+    <bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+	  <constructor-arg name="decisionVoters">
+	    <list>	
+	    	<ref bean="decisorDeRoles"/>
+            <ref bean="decisorDeAutenticacion" />	    	    	     
+		</list>	
+	  </constructor-arg>
+	</bean>
+     
      
 </beans>

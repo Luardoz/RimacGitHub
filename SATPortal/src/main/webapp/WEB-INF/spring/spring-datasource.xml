@@ -23,5 +23,12 @@
 					   resource-ref      = "true" 
               		   lookup-on-startup = "false"
               		   proxy-interface   = "javax.sql.DataSource"/>
+              		   
+	  <jee:jndi-lookup id				 = "seguridadDS" 
+	  				   jndi-name		 = "${bd.seguridad.datasource.jndi}"
+	  				   cache             = "true"
+					   resource-ref      = "true" 
+              		   lookup-on-startup = "false"
+              		   proxy-interface   = "javax.sql.DataSource"/>              		   
 
 </beans>

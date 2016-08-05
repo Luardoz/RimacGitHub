@@ -3,6 +3,7 @@ package pe.com.rimac.sat.portal.controller;
 import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import pe.com.rimac.sat.portal.bean.UsuarioRimac;
 import pe.com.rimac.sat.portal.exception.DBException;
+import pe.com.rimac.sat.portal.service.SeguridadService;
 import pe.com.rimac.sat.portal.util.Properties;
 
 /**
@@ -30,6 +33,8 @@ public class HomeController {
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	@Autowired
 	private Properties properties;
+	@Autowired
+	private SeguridadService seguridadService;
 	
     @RequestMapping(value = { "/" }, method = RequestMethod.GET)
     public String homePage(HttpServletRequest request) {
@@ -52,22 +57,22 @@ public class HomeController {
 		String traza = "[decisor]";
 		logger.info(traza + "Identificando rol");		
 		Collection<? extends GrantedAuthority> authorities= loggedUserAuthorities();		
+		
+		for(GrantedAuthority grant: authorities){
+			logger.info("Grant: " + grant.getAuthority());
+		}
+		
 		 if (authorities.contains(new SimpleGrantedAuthority(properties.cAPPLICATION_ROLE_ADMIN))) {
 			 logger.info(traza + "Acceso administrador");			 
 			 page = "redirect:../admin";
-		 }else if (authorities.contains(new SimpleGrantedAuthority(properties.cAPPLICATION_ROLE_USER))) {
+		 }else if (authorities.contains(new SimpleGrantedAuthority(properties.cAPPLICATION_ROLE_USER))) {			 
 			 logger.info(traza + "Acceso usuario");
 			 logger.info(traza + "Buscando los datos del usuario en la BD");
-
-//			 UsuarioRimac usuario = (UsuarioRimac) request.getSession().getAttribute("user");   
-//			 UsuarioRimac usuario = seguridadService.getUsuario(traza, getPrincipal(), "");
-//			if(usuario != null){
-//				HttpSession session = request.getSession();
-//				session.setAttribute("user", usuario);
-				page = "redirect:../user";
-//			}else{
-//				page = "redirect:/login?error=No existe el usuario. Por favor ingrese las credenciales correctamente";				
-//			}			 		    
+ 
+			UsuarioRimac usuario = seguridadService.getUsuario(traza, getPrincipal(), "");
+			HttpSession session = request.getSession();
+			session.setAttribute("user", usuario);
+			page = "redirect:../user";			 		    
 		 }
 		
 		return page;
@@ -84,22 +89,10 @@ public class HomeController {
         return "public/login";
     }    
  
-    @RequestMapping(value = "/login/{error}", method = RequestMethod.GET)    
-    public final String displayLoginform(Model model,  @PathVariable final String error) {
-    	
-    	String mensaje = "";
-    	
-    	if(properties.cSECURITY_ACCOUNT_DISABLED.equals(error))
-    		mensaje = "El usuario está deshabilitado";
-    	else if(properties.cSECURITY_ACCOUNT_LOCKED.equals(error))
-    		mensaje = "El usuario está bloqueado";
-    	else if(properties.cSECURITY_BAD_CREDENTIALS.equals(error))
-    		mensaje = "Usuario y/o contraseña son incorrectos";
-    	else if(properties.cSECURITY_CREDENTIALS_EXPIRED.equals(error))
-    		mensaje = "Las credenciales han expirado";
-    	else if(properties.cSECURITY_USER_NOT_EXIST.equals(error))
-    		mensaje = "El usuario no existe en la Base de Datos";
-    	
+    @RequestMapping(value = "/login/{error}", method = RequestMethod.POST)    
+    public final String displayLoginform(HttpServletRequest request,
+    		Model model, @PathVariable final String error) {    	
+    	String mensaje = (String) request.getAttribute("exceptionLogin");    	
         model.addAttribute("mensaje", mensaje);
     	return "public/login";
     }

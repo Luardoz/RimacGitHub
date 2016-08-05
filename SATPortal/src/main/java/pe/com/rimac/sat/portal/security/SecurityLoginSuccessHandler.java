@@ -15,10 +15,6 @@ import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import pe.com.rimac.sat.portal.bean.UsuarioRimac;
-import pe.com.rimac.sat.portal.controller.HomeController;
-import pe.com.rimac.sat.portal.exception.DBException;
-import pe.com.rimac.sat.portal.service.SeguridadService;
 import pe.com.rimac.sat.portal.util.Properties;
 
 @Component
@@ -26,8 +22,6 @@ public class SecurityLoginSuccessHandler extends SimpleUrlAuthenticationSuccessH
 
 	private static final Logger logger = LoggerFactory.getLogger(SecurityLoginSuccessHandler.class);
 	
-	@Autowired
-	private SeguridadService seguridadService;	
 	@Autowired
 	private Properties properties;	
 	private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
@@ -41,15 +35,11 @@ public class SecurityLoginSuccessHandler extends SimpleUrlAuthenticationSuccessH
 		String traza = "[onAuthenticationSuccess]";		
 		String url = "";
 		logger.info(traza + "Iniciando el metodo onAuthenticationSuccess");
-		try{
-			UsuarioRimac usuario = seguridadService.getUsuario(traza, HomeController.getPrincipal(), "");
-			request.getSession().setMaxInactiveInterval(properties.cAPPLICATION_SESSION_TIME);
-			request.getSession().setAttribute("user", usuario);				
-			url = "/autentificacion/decisor";
-		}catch(DBException e){
-			logger.error("[onAuthenticationSuccess]DBException:" + e.getMsjError());
-			url = "/login/userNotExist";
-		}
+
+		logger.info(traza + "Aplicando tiempo maximo de sesión: " + properties.cAPPLICATION_SESSION_TIME);
+		request.getSession().setMaxInactiveInterval(properties.cAPPLICATION_SESSION_TIME);						
+		url = "/autentificacion/decisor";
+		
 		redirectStrategy.sendRedirect(request, response, url);
 	}
 }

@@ -17,7 +17,7 @@
 		<fieldset style="border: 1px solid #eaeaea;border-radius: 4px;margin: 10px 0px 20px 0px;padding: 15px 0;">
 			<!-- <legend>Datos de Busqueda</legend> -->
 			<div class="form-group" style="overflow: visible;">
-		        <label class="control-label col-xs-3 required" style="width: 15%;margin: 7px;">Estado:</label>
+		        <label class="control-label col-xs-3" style="width: 15%;margin: 7px;">Estado:</label>
 		        <div class="col-xs-3" style="margin: 0px 30px 0px -30px;">
 		         <select title="" class="selectpicker form-control" id="idestado" name="idestado">
 		         	<option value="">Seleccione</option>
@@ -29,7 +29,7 @@
 		        <div class="result"></div>
 		    </div>	
 			<div class="form-group" style="overflow: visible;">
-		        <label class="control-label col-xs-3 required" style="width: 15%;">N° Ticket:</label>
+		        <label class="control-label col-xs-3" style="width: 15%;">N° Ticket:</label>
 		        <div class="col-xs-3">
 		            <input title="" type="text" class="numbersOnly form-control" id="nticket" name="nticket" style="margin: -7px 0px 0px -10px;">		             
 		        </div>

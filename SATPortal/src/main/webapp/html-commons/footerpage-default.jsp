@@ -3,9 +3,10 @@
 		Haz clic <a style="cursor: pointer;" id="link-content-navegadores" data-toggle="modal" data-target="#content-navegadores">AQUÍ</a> para ver los navegadores soportados.		
 	</div>
 	<div class="footer-signature">
+	<!-- 
 		<a target="blank" class="footer" id="tycfooter" onclick="$('#link-content-tycgenerales').click();">
-			<span id="link-tycfooter" style="cursor: pointer;">Términos y condiciones</span> </a> <strong>-
-			RIMAC Seguros y Reaseguros</strong> . Todos los derechos reservados.			
+			<span id="link-tycfooter" style="cursor: pointer;">Términos y condiciones</span> </a>  -->
+			<strong>RIMAC Seguros y Reaseguros</strong> . Todos los derechos reservados.			
 	</div>
 	
 </div>

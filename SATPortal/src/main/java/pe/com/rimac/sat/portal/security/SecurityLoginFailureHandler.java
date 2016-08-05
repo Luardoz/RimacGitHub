@@ -12,17 +12,25 @@ import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SecurityLoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
 	private static final Logger logger = Logger.getLogger(SecurityLoginFailureHandler.class);
 	
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {           	
-    	logger.error("[onAuthenticationFailure]ERROR de inicio sesion: "+exception);    
+    	logger.error("[onAuthenticationFailure]ERROR de inicio sesion: " + exception);    
     	
-    	if(exception instanceof BadCredentialsException)
+    	setUseForward(true);
+    	saveException(request, exception);
+    	    	
+    	if(exception instanceof UsernameNotFoundException)
+    		setDefaultFailureUrl("/login/userNotExist");
+    	else if(exception instanceof BadCredentialsException)
     		setDefaultFailureUrl("/login/badCredentials");
     	else if(exception instanceof CredentialsExpiredException)
     		setDefaultFailureUrl("/login/credentialsExpired");
@@ -31,6 +39,7 @@ public class SecurityLoginFailureHandler extends SimpleUrlAuthenticationFailureH
     	else if(exception instanceof DisabledException)
     		setDefaultFailureUrl("/login/accountDisabled");
     	
+    	request.setAttribute("exceptionLogin", exception.getMessage());
     	super.onAuthenticationFailure(request, response, exception);     	
     }
 

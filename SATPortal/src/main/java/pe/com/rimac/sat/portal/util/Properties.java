@@ -66,7 +66,15 @@ public class Properties {
 	
 	/*
 	 * PROPIEDADES SPRING SECURITY
-	 */		
+	 */			
+	@Value("${ldap.factory}")
+	public String cLDAP_FACTORY;
+	@Value("${ldap.host}")
+	public String cLDAP_HOST;
+	@Value("${ldap.autentification}")
+	public String cLDAP_AUTENTIFICATION;	
+	@Value("${security.role.prefix}")
+	public String cSECURITY_ROLE_PREFIX;		
 	@Value("${security.bad.credentials}")
 	public String cSECURITY_BAD_CREDENTIALS;
 	@Value("${security.credentials.expired}")
@@ -82,8 +90,9 @@ public class Properties {
 	@Value("${application.role.user}")
 	public String cAPPLICATION_ROLE_USER;
 	@Value("${application.role.admin}")
-	public String cAPPLICATION_ROLE_ADMIN;
-	
+	public String cAPPLICATION_ROLE_ADMIN;	
+	@Value("${application.modo.dev}")
+	public Boolean cAPPLICATION_MODO_DEV;
 	/*
 	 * PROPIEDADES CODIGOS ERROR
 	 */

@@ -32,6 +32,10 @@ public class SeguridadDAOImpl implements SeguridadDAO{
 	@Qualifier("satDS")
 	private DataSource satDS;
 	
+//	@Autowired
+//	@Qualifier("seguridadDS")
+//	private DataSource seguridadDS;
+	
 	@Autowired
 	private Properties properties;
 	

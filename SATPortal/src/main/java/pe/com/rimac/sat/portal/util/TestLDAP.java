@@ -38,12 +38,11 @@ public class TestLDAP {
 		try {
 			Hashtable env = new Hashtable();			
 	        env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-	        env.put(Context.PROVIDER_URL, "ldap://172.25.32.62:389");
+	        env.put(Context.PROVIDER_URL, "ldap://172.24.1.10:389");
 	        env.put(Context.SECURITY_AUTHENTICATION, "simple");
-//	        env.put(Context.SECURITY_PRINCIPAL, "cn=xt0180,o=Rimac");
 	        env.put(Context.SECURITY_PRINCIPAL, "xt0180@rimac.com.pe");
-	        env.put(Context.SECURITY_CREDENTIALS, "");
-	        env.put(Context.REFERRAL, "follow");  
+	        env.put(Context.SECURITY_CREDENTIALS, "Rimac2016/");
+//	        env.put(Context.REFERRAL, "follow");  
        
             DirContext ctx = new InitialDirContext(env);
             LdapContext ldapctx = new InitialLdapContext(env, null);
