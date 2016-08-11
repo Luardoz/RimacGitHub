@@ -80,7 +80,7 @@
         </div>
 		
 		
-		<div class="row">
+		<!-- <div class="row">
 			<div class="col-md-12">
 				<p class="bg-info">
 					<small>
@@ -88,7 +88,7 @@
 					</small>
 				</p>
 			</div>
-		</div>
+		</div> -->
 	</div>
 </div>
 

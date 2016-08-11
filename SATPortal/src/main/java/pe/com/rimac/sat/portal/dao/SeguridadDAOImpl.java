@@ -32,9 +32,9 @@ public class SeguridadDAOImpl implements SeguridadDAO{
 	@Qualifier("satDS")
 	private DataSource satDS;
 	
-//	@Autowired
-//	@Qualifier("seguridadDS")
-//	private DataSource seguridadDS;
+	@Autowired
+	@Qualifier("seguridadDS")
+	private DataSource seguridadDS;
 	
 	@Autowired
 	private Properties properties;
@@ -58,10 +58,16 @@ public class SeguridadDAOImpl implements SeguridadDAO{
 			logger.info(traza + "Input: [a_idusuario = " + idUsuario + "]");
 			logger.info(traza + "Input: [a_clave =  " + clave + "]");
 			
-			objJdbcTemplate = new JdbcTemplate(satDS);
+			DataSource dataSource;		
+			if(properties.cAPPLICATION_MODO_DEV)
+				dataSource = satDS;
+			else
+				dataSource = seguridadDS;
+						
+			objJdbcTemplate = new JdbcTemplate(dataSource);
 			objJdbcTemplate.setQueryTimeout(properties.cBD_SAT_TIMEOUT_CONSULTA);
 			
-			objJdbcCall = new SimpleJdbcCall(satDS)
+			objJdbcCall = new SimpleJdbcCall(dataSource)
     				.withoutProcedureColumnMetaDataAccess()
 		            .withSchemaName(properties.cBD_COMUNES_OWNER)
 		            .withCatalogName(properties.cPQ_COMUN_SEGURIDAD)

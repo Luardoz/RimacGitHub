@@ -9,10 +9,12 @@ import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
+import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,7 +35,7 @@ public class AuthenticationProviderR implements AuthenticationProvider, Serializ
 	
 	private static final long serialVersionUID = 4209894584554690640L;
 	private static final Logger logger = LoggerFactory.getLogger(AuthenticationProviderR.class);
-
+	
 	@Autowired
 	private Properties properties;
 	
@@ -66,16 +68,14 @@ public class AuthenticationProviderR implements AuthenticationProvider, Serializ
 		String username = authentication.getName();
 		String password = (String) authentication.getCredentials();		
 		logger.info(traza + "Iniciando la auntenticación en Spring Security");
-		
+			
 		//roles para prueba
 		SimpleGrantedAuthority grantUser = new SimpleGrantedAuthority(properties.cAPPLICATION_ROLE_USER);
 		
-		try{
+		try{																	
 			logger.info(traza + "Buscando al usuario en la BD..");
 			usuarioRimac= seguridadDAO.getUser(traza, username, password);
-			logger.info(traza + "Usuario encontrado." + usuarioRimac.getIdUsuario() + " (" + usuarioRimac.getUpn() +")");
-			if(usuarioRimac.getUpn() == null || "".equals(usuarioRimac.getUpn()))
-				throw new UsernameNotFoundException("Usuario " + username + " no está registrado en Active Directory");
+			logger.info(traza + "Usuario encontrado." + usuarioRimac.getIdUsuario() + " (" + usuarioRimac.getUpn() +")");			
 		}catch(DBException e){
 			logger.error(traza + "DBException: " + e.getMessage());
 			throw new UsernameNotFoundException("Usuario " + username + " no existe en la Base de Datos");
@@ -88,13 +88,17 @@ public class AuthenticationProviderR implements AuthenticationProvider, Serializ
 			user = new User(username, password, roles);
 		}else{
 			logger.info(traza + "Aunteticación en modo PROD. Se valida AD y BD");
-			if(loginAD(usuarioRimac.getUpn(), password)){
-				logger.info(traza + "Identificación exitosa contra AD");
-				Collection<SimpleGrantedAuthority> roles = new ArrayList();
-				roles.add(grantUser);
-				user = new User(username, password, roles);
-			}else{
-				throw new BadCredentialsException("Credenciales inválidas (Active Directory)");
+			if(usuarioRimac.getUpn() == null || "".equals(usuarioRimac.getUpn()))
+				throw new UsernameNotFoundException("Usuario " + username + " no está registrado en Active Directory");
+			else{
+				if(loginAD(usuarioRimac.getUpn(), password)){			
+					logger.info(traza + "Identificación exitosa contra AD");
+					Collection<SimpleGrantedAuthority> roles = new ArrayList();
+					roles.add(grantUser);
+					user = new User(username, password, roles);
+				}else{
+					throw new BadCredentialsException("Credenciales inválidas (Active Directory)");
+				}
 			}
 		}
 		
