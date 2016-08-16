@@ -28,7 +28,9 @@ public class Properties {
 	@Value("${pq.comun.ges}")
 	public String cPQ_COMUN_GES;
 	@Value("${pq.comun.seguridad}")
-	public String cPQ_COMUN_SEGURIDAD;	
+	public String cPQ_COMUN_SEGURIDAD;
+	@Value("${pq.comun.comun}")
+	public String cPQ_COMUN_COMUN;	
 	@Value("${sp.combo.tipocaso}")
 	public String cSP_COMBO_TIPOCASO;
 	@Value("${sp.combo.producto}")
@@ -91,8 +93,8 @@ public class Properties {
 	public String cAPPLICATION_ROLE_USER;
 	@Value("${application.role.admin}")
 	public String cAPPLICATION_ROLE_ADMIN;	
-	@Value("${application.modo.dev}")
-	public Boolean cAPPLICATION_MODO_DEV;
+//	@Value("${application.modo.dev}")
+//	public Boolean cAPPLICATION_MODO_DEV;
 	/*
 	 * PROPIEDADES CODIGOS ERROR
 	 */
@@ -102,4 +104,12 @@ public class Properties {
 	public String cCODIGO_ERROR_ESTANDAR;
 	@Value("${codigo.error.bd}")
 	public String cCODIGO_ERROR_BD;
+	
+	/*
+	 * PROPIEDADES CONSTANTES
+	 */
+	@Value("${ideconstante.LDAPhost}")
+	public String cCTTE_LDAP_HOST;
+	@Value("${ideconstante.indicadorLDAP}")
+	public String cINDIDACOR_LDAP;
 }

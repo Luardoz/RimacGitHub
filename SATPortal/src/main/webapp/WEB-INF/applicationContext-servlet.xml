@@ -31,8 +31,8 @@
 
 	<context:annotation-config />
 	<context:component-scan base-package="pe.com.rimac.sat.portal" />	
-	<!-- <context:property-placeholder location="classpath:satportal.properties" /> -->
-	<context:property-placeholder location="file:/fs001/ComponentesRimac01/ArchivosConfiguracion/SAS/SAT/SAT_PORTAL/satportal.properties" />
+	<context:property-placeholder location="classpath:satportal.properties" />
+	<!-- <context:property-placeholder location="file:/fs001/ComponentesRimac01/ArchivosConfiguracion/SAS/SAT/SAT_PORTAL/satportal.properties" /> -->
 	
 	<import resource="spring/spring-config.xml" />
 	<import resource="spring/spring-datasource.xml" />		

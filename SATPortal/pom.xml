@@ -184,6 +184,13 @@
 		    <artifactId>ojdbc6</artifactId>
 		    <version>11.2.0.4.0</version>
 		</dependency>
+		
+		<!-- Libs SAS -->
+		<dependency>
+		    <groupId>pe.com.rimac.sas</groupId>
+		    <artifactId>AAAWEJB</artifactId>
+		    <version>1</version>
+		</dependency>
 	
 		<!-- Test -->
 		<dependency>
